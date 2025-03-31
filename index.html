@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="musicPlayerStyles.css" rel="stylesheet">
+    <title>Music player</title>
+</head>
+<body>
+    <div id="musicPlayer">
+
+        <div id="songManager">
+            <div id="currentSongMenu">
+                <!--вкладка с информацией о текущей песне-->
+
+                <!-- ???для JS нужен только этот "div"??? -->
+                <div class="innerContent">
+                    <img id="imageSong" src="icons/placeholder.png" alt-src="placeholder.png">
+                    <fieldset>
+                        <legend>name</legend>
+                        <p id="nameCurrentSong">name song</p>
+                    </fieldset>
+                    <fieldset>
+                        <legend>author</legend>
+                        <p id="autorCurrentSong">author song</p>
+                    </fieldset>
+                    <fieldset>
+                        <legend>extra</legend>
+                        <p>song release date: <p id="releaseCurrentSong"></p></p>
+                        <p>album: <p id="albumCurrentSong"></p></p>
+                        <p>type of music: <p id="typeCurrentSong"></p></p>
+                    </fieldset>
+                </div>
+            </div>
+            <div id="currentPlaylistMenu">
+                <!--вкладка с песнями текущего плейлиста-->
+                <div class="innerContent">
+                    <h2 id="nameCurrentPlaylist">name playlist</h2>
+
+                    <!-- для JS нужен только этот "div" -->
+                    <div id="currentPlaylist">
+
+                    </div>
+                </div>
+            </div>
+            <div id="playlistsMenu">
+                <!--вкладка со всеми плейлистами-->
+                <div class="innerContent">
+                    <h2 id="namePlaylistsMenu">playlists menu</h2>
+
+                    <!-- для JS нужен только этот "div" -->
+                    <div id="playlists" class="playlists">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="bar">
+            <!--вкладка с таймлайном текущей песни и др. кнопками-->
+            <div id="timeline">
+                <div id="timeSlider">
+                    <!--ползунок таймлайна текущей песни-->
+                    <div id="sliderArea"><div id="slider"></div></div>
+
+                </div>
+            </div>
+
+            <div id="buttonsBar">
+                <p id="songTime">
+                    <!--проигранное время/время песни-->
+                </p>
+
+                <div class="contarinerButtons">
+                    <div id="buttons">
+
+                        <div id="repeat">
+                            <!--кнопка зацикливания текущей песни-->
+                            <img src="icons/repeat_off_button.png" class="imageButton">
+                        </div>
+
+                        <!--кнопки "предыдущая песня" "воспроизвести/пауза" "следующая песня"-->
+                        <div id="buttonPrevious">
+                            <img src="icons/previous_button.png" class="imageButton">
+                        </div>
+                        <div id="buttonPlay">
+                            <img src="icons/play_button.png" class="imageButton">
+                        </div>
+                        <div id="buttonNext">
+                            <img src="icons/next_button.png" class="imageButton">
+                        </div>
+
+
+                        <div id="likeButton" onclick="whatDuration()">
+                            <!--кнопка "нравится"-->
+                            <img src="icons/like_off_button.png" class="imageButton">
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div id="volume">
+                    <!--ползунок громкости-->
+                    <div id="volumeSlider">
+
+                    </div>
+                <div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="musicPlayerScript.js"></script>
+</body>
+</html>

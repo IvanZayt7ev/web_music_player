@@ -1,0 +1,95 @@
+body {
+    background: #2F2E47;
+    margin: 0px;
+    padding: 0px;
+}
+p {
+    margin: 0px;
+}
+fieldset {
+    font-size: 120%;
+}
+#musicPlayer {
+    display: grid;
+    width: 100%;
+    height: 100vh;
+}
+#songManager {
+    display: flex;
+    height: calc(100vh - 100px);
+}
+#currentSongMenu {
+    background: grey;
+    width: 33%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+}
+#imageSong {
+    width: 100%;
+}
+.innerContent {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+
+#currentPlaylistMenu {
+    background: grey;
+    width: 33%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+}
+.song, .playlist {
+    background: grey;
+    border: 4px solid;
+    margin: 5px;
+    padding: 5px;
+    font-size: 130%;
+}
+#playlistsMenu {
+    background: grey;
+    width: 33%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+}
+
+
+
+
+#bar {
+    display: grid;
+    width: 100%;
+    background: #100F2E;
+    height: 100px;
+}
+#sliderArea {
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
+    height: 20px;
+    width: 90%;
+}
+#slider {
+    background: blue;
+    height: 20px;
+    width: 20px;
+    position: relative;
+}
+#buttons {
+    height: 50%;
+    display: flex;
+}
+.contarinerButtons {
+    margin-left: auto;
+    margin-right: auto;
+}
+.imageButton {
+    height: 75px;
+}
