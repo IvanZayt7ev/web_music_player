@@ -164,37 +164,15 @@ function playRepeatAgainSong() {
         playNextSong()
     }
 }
-/*
-slider.onmousedown = function(event) {
-    event.preventDefault();
 
-    let shiftX = event.clientX - slider.getBoundingClientRect().left;
+setInterval(function() {
+    slider.value = (audio.currentTime / audio.duration * 100) || 0;
+}, 500);
 
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-
-    function onMouseMove(event) {
-        let newLeft = event.clientX - shiftX - timelineSong.getBoundingClientRect().left;
-        if(newLeft < 0) {
-            newLeft = 0;
-        }
-        let rightEdge = timelineSong.offsetWidth - slider.offsetWidth;
-        if(newLeft > rightEdge) {
-            newLeft = rightEdge;
-        }
-        slider.style.left = newLeft + "px";
-    }
-
-    function onMouseUp() {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-    }
-
-    slider.ondragstart = function() {
-        return false;
-    }
+function updateCurrentTime() {
+    audio.currentTime = slider.value * audio.duration / 100;
 }
-*/
+
 
 
 playlistsMenu.addEventListener("click", updateCurrentPlaylistMenu);
@@ -210,7 +188,7 @@ audio.addEventListener("ended", playRepeatAgainSong);
 document.addEventListener("keydown", onSpacePress);
 
 //slider.addEventListener("mousedown", moveSlider);
-
+slider.addEventListener("change", updateCurrentTime);
 
 
 // создаём несколько плейлистов для теста
