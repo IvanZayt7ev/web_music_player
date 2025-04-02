@@ -60,17 +60,14 @@
             <!--вкладка с таймлайном текущей песни и др. кнопками-->
             <div id="timeline">
                 <div id="timeSlider">
-                    <!--ползунок таймлайна текущей песни-->
-                    <div id="sliderArea"><div id="slider"></div></div>
-
+                    <div id="sliderContainer">
+                        <!--ползунок таймлайна текущей песни-->
+                        <input id="slider" type="range" min="0" max="100" step="1" value="0">
+                    </div>
                 </div>
             </div>
 
             <div id="buttonsBar">
-                <p id="songTime">
-                    <!--проигранное время/время песни-->
-                </p>
-
                 <div class="contarinerButtons">
                     <div id="buttons">
 
@@ -98,16 +95,6 @@
 
                     </div>
                 </div>
-
-
-                <div id="volume">
-                    <!--ползунок громкости-->
-                    <div id="volumeSlider">
-
-                    </div>
-                <div>
-
-            </div>
         </div>
 
     </div>

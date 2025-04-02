@@ -20,11 +20,11 @@ const default_audio = {
         "autor": "Tchaikovsky",
     },
 }
-const Tchaikovsky_playlist = [
+const tchaikovsky_playlist = [
     "audioFiles/Tchaikovsky - Piano Concerto No. 1.webm",
     "audioFiles/Tchaikovsky - Waltz of the Flowers (The Nutcracker Suite).webm",
 ]
-const ClassicMusic = Object.keys(default_audio);
+const classicMusic = Object.keys(default_audio);
 
 
 
@@ -32,11 +32,15 @@ const ClassicMusic = Object.keys(default_audio);
 const currentSongMenu = document.getElementById("currentSong");
 const currentPlaylistMenu = document.getElementById("currentPlaylist");
 const playlistsMenu = document.getElementById("playlists");
+const nameCurrentSong = document.getElementById("nameCurrentSong");
+const autorCurrentSong = document.getElementById("autorCurrentSong");
 // кнопки управления песнями
 const buttonPlay = document.getElementById("buttonPlay");
 const buttonPrevious = document.getElementById("buttonPrevious");
 const buttonNext = document.getElementById("buttonNext");
 const buttonLoop = document.getElementById("repeat");
+let slider = document.getElementById("slider");
+let timelineSong = document.getElementById("timelineSong");
 
 let audio = new Audio();
 let playerData = {
@@ -67,6 +71,8 @@ function updateCurrentPlaylistMenu(event) {
 }
 
 function selectPlaylist(arr) {
+    selectedPlaylist = arr;
+
     for(let src of arr) {
         let song = document.createElement("div");
         song.className = "song";
@@ -104,10 +110,20 @@ function playPauseSong() {
         audio.play();
     };
     playerData.isPlay = !playerData.isPlay;
+
+    nameCurrentSong.innerHTML = default_audio[playerData.currentSong].name;
+    autorCurrentSong.innerHTML = default_audio[playerData.currentSong].autor;
 };
 
+function onSpacePress(event) {
+    if(event.code == "Space") {
+        event.preventDefault();
+        playPauseSong();
+    }
+}
+
 function playPreviousSong() {
-    let indexSong = playerData?.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist.at(-1)));
+    let indexSong = playerData.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist.at(-1)));
     if(indexSong != 0) {
         playerData.currentSong = playerData.currentPlaylist[indexSong - 1];
     } else {
@@ -119,7 +135,7 @@ function playPreviousSong() {
 }
 
 function playNextSong() {
-    let indexSong = playerData?.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist[0]));
+    let indexSong = playerData.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist[0]));
     if(indexSong != playerData.currentPlaylist.length - 1) {
         playerData.currentSong = playerData.currentPlaylist[indexSong + 1];
     } else {
@@ -142,11 +158,22 @@ function playInLoop() {
 function playRepeatAgainSong() {
     playerData.isPlay = false;
     if(playerData.isLoop) {
-        audio.reset();
+        playerData.currentSongTime = 0;
+        audio.playPauseSong();
     } else {
         playNextSong()
     }
 }
+
+setInterval(function() {
+    slider.value = (audio.currentTime / audio.duration * 100) || 0;
+}, 500);
+
+function updateCurrentTime() {
+    audio.currentTime = slider.value * audio.duration / 100;
+}
+
+
 
 playlistsMenu.addEventListener("click", updateCurrentPlaylistMenu);
 currentPlaylistMenu.addEventListener("click", setSong);
@@ -158,11 +185,15 @@ buttonLoop.addEventListener("click", playInLoop);
 
 audio.addEventListener("ended", playRepeatAgainSong);
 
+document.addEventListener("keydown", onSpacePress);
+
+//slider.addEventListener("mousedown", moveSlider);
+slider.addEventListener("change", updateCurrentTime);
 
 
 // создаём несколько плейлистов для теста
-createPlaylist(ClassicMusic, "Classic music");
-createPlaylist(Tchaikovsky_playlist, "Tchaikovsky");
+createPlaylist(classicMusic, "Classic music");
+createPlaylist(tchaikovsky_playlist, "Tchaikovsky");
 
-selectPlaylist(ClassicMusic);
-playerData.currentPlaylist = ClassicMusic;
+selectPlaylist(classicMusic);
+playerData.currentPlaylist = classicMusic;
