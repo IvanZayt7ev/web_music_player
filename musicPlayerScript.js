@@ -39,7 +39,8 @@ const buttonPlay = document.getElementById("buttonPlay");
 const buttonPrevious = document.getElementById("buttonPrevious");
 const buttonNext = document.getElementById("buttonNext");
 const buttonLoop = document.getElementById("repeat");
-const slider = document.getElementById("slider");
+let slider = document.getElementById("slider");
+let timelineSong = document.getElementById("timelineSong");
 
 let audio = new Audio();
 let playerData = {
@@ -163,31 +164,37 @@ function playRepeatAgainSong() {
         playNextSong()
     }
 }
+/*
+slider.onmousedown = function(event) {
+    event.preventDefault();
 
-function moveSlider(event) {
     let shiftX = event.clientX - slider.getBoundingClientRect().left;
 
-    moveAt(event.pageX);
-
-    function moveAt(pageX) {
-        slider.style.left = pageX - shiftX + "px";
-    }
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
 
     function onMouseMove(event) {
-        moveAt(event.pageX);
+        let newLeft = event.clientX - shiftX - timelineSong.getBoundingClientRect().left;
+        if(newLeft < 0) {
+            newLeft = 0;
+        }
+        let rightEdge = timelineSong.offsetWidth - slider.offsetWidth;
+        if(newLeft > rightEdge) {
+            newLeft = rightEdge;
+        }
+        slider.style.left = newLeft + "px";
     }
-    document.addEventListener("mousemove", onMouseMove);
 
-    slider.onmouseup = function() {
+    function onMouseUp() {
         document.removeEventListener("mousemove", onMouseMove);
-        slider.onmouseup = null;
+        document.removeEventListener("mouseup", onMouseUp);
     }
 
     slider.ondragstart = function() {
         return false;
     }
 }
-
+*/
 
 
 playlistsMenu.addEventListener("click", updateCurrentPlaylistMenu);
@@ -202,7 +209,7 @@ audio.addEventListener("ended", playRepeatAgainSong);
 
 document.addEventListener("keydown", onSpacePress);
 
-slider.addEventListener("mousedown", moveSlider);
+//slider.addEventListener("mousedown", moveSlider);
 
 
 

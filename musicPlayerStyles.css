@@ -67,29 +67,53 @@ fieldset {
     display: grid;
     width: 100%;
     background: #100F2E;
+    margin: 0px;
     height: 100px;
 }
-#sliderArea {
-    background: white;
-    margin-left: auto;
-    margin-right: auto;
-    height: 20px;
-    width: 90%;
-}
-#slider {
-    background: blue;
-    height: 20px;
-    width: 20px;
-    position: relative;
-}
-#buttons {
-    height: 50%;
+#timeSlider {
     display: flex;
 }
+#timelineSong {
+    background: white;
+    border-radius: 5px;
+    width: 95%;
+    height: 15px;
+    margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#slider {
+    width: 20px;
+    height: 25px;
+    border-radius: 3px;
+    position: relative;
+    top: -5px;
+    background: blue;
+    cursor: pointer;
+}
+#slideContainer {
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+}
+#zipper {
+    width: 100%;
+}
+
+#buttonsBar {
+    display: flex;
+}
+#buttons {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
 .contarinerButtons {
+    position: relative;
+    display: flex;
     margin-left: auto;
     margin-right: auto;
 }
 .imageButton {
-    height: 75px;
+    height: 60px;
 }
