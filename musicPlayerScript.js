@@ -153,6 +153,18 @@ function onSpacePress(event) {
         playPauseSong();
     }
 }
+function onArrowLeftPress(event) {
+    if(event.code == "ArrowLeft") {
+        event.preventDefault();
+        audio.currentTime -= 5;
+    }
+}
+function onArrowRightPress(event) {
+    if(event.code == "ArrowRight") {
+        event.preventDefault();
+        audio.currentTime += 5;
+    }
+}
 
 function playPreviousSong() {
     let indexSong = playerData.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist.at(-1)));
@@ -191,7 +203,7 @@ function playRepeatAgainSong() {
     playerData.isPlay = false;
     if(playerData.isLoop) {
         playerData.currentSongTime = 0;
-        audio.playPauseSong();
+        audio.play();
     } else {
         playNextSong()
     }
@@ -218,6 +230,8 @@ buttonLoop.addEventListener("click", playInLoop);
 audio.addEventListener("ended", playRepeatAgainSong);
 
 document.addEventListener("keydown", onSpacePress);
+document.addEventListener("keydown", onArrowLeftPress);
+document.addEventListener("keydown", onArrowRightPress);
 
 slider.addEventListener("change", updateCurrentTime);
 
