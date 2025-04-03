@@ -24,7 +24,7 @@ const tchaikovsky_playlist = [
     "audioFiles/Tchaikovsky - Piano Concerto No. 1.webm",
     "audioFiles/Tchaikovsky - Waltz of the Flowers (The Nutcracker Suite).webm",
 ]
-const classicMusic = Object.keys(default_audio);
+const all_tracks = Object.keys(default_audio);
 
 
 
@@ -69,16 +69,27 @@ function addNewPlaylist(input) {
     reader.onload = function() {
         let newPlaylistArr = JSON.parse(reader.result);
         for(let newPlaylist of newPlaylistArr) {
+            addPlaylistInBasic(newPlaylist);
             createPlaylist(newPlaylist, file.name.slice(0, file.name.lastIndexOf(".")));
         }
     }
 }
 
-function addPlaylistInBasic(src) {
-    if(default_audio[src] === undefined) {
-        default_audio[src] = new Object();
-        default_audio[src].name = src.slice(src.indexOf("/") + 1, src.lastIndexOf("."))
+function addPlaylistInBasic(arr) {
+    arr.forEach(checkTrack => {
+        if(!Object.keys(default_audio).includes(checkTrack)) {
+            default_audio[checkTrack] = {};
+            default_audio[checkTrack].name = checkTrack.slice(checkTrack.indexOf("/") + 1, checkTrack.lastIndexOf("."));
+        };
+    });
+    playlistsMenu.children[0].dataset.songs = JSON.stringify(Object.keys(default_audio));
+    if(playerData.currentPlaylist == all_tracks) {
+        currentPlaylistMenu.querySelectorAll(".song").forEach(song => song.remove())
+        selectPlaylist(Object.keys(default_audio))
     }
+}
+
+function getNameFromSrc(src) {
     return src.slice(src.indexOf("/") + 1, src.lastIndexOf("."));
 }
 
@@ -97,7 +108,7 @@ function selectPlaylist(arr) {
     for(let src of arr) {
         let song = document.createElement("div");
         song.className = "song";
-        song.innerHTML = default_audio[src]?.name || addPlaylistInBasic(src);
+        song.innerHTML = default_audio[src]?.name || getNameFromSrc(src);
         song.dataset.src = src;
 
         currentPlaylistMenu.append(song);
@@ -213,8 +224,8 @@ slider.addEventListener("change", updateCurrentTime);
 
 
 // создаём несколько плейлистов для теста
-createPlaylist(classicMusic, "Classic music");
+createPlaylist(all_tracks, "all music");
 createPlaylist(tchaikovsky_playlist, "Tchaikovsky");
 
-selectPlaylist(classicMusic);
-playerData.currentPlaylist = classicMusic;
+selectPlaylist(all_tracks);
+playerData.currentPlaylist = all_tracks;
