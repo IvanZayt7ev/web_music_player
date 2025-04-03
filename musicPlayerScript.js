@@ -34,6 +34,7 @@ const currentPlaylistMenu = document.getElementById("currentPlaylist");
 const playlistsMenu = document.getElementById("playlists");
 const nameCurrentSong = document.getElementById("nameCurrentSong");
 const autorCurrentSong = document.getElementById("autorCurrentSong");
+
 // кнопки управления песнями
 const buttonPlay = document.getElementById("buttonPlay");
 const buttonPrevious = document.getElementById("buttonPrevious");
@@ -61,6 +62,26 @@ function createPlaylist(arrPlaylist, namePlaylist) {
     playlistsMenu.append(playlist);
 }
 
+function addNewPlaylist(input) {
+    let file = input.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function() {
+        let newPlaylistArr = JSON.parse(reader.result);
+        for(let newPlaylist of newPlaylistArr) {
+            createPlaylist(newPlaylist, file.name.slice(0, file.name.lastIndexOf(".")));
+        }
+    }
+}
+
+function addPlaylistInBasic(src) {
+    if(default_audio[src] === undefined) {
+        default_audio[src] = new Object();
+        default_audio[src].name = src.slice(src.indexOf("/") + 1, src.lastIndexOf("."))
+    }
+    return src.slice(src.indexOf("/") + 1, src.lastIndexOf("."));
+}
+
 function updateCurrentPlaylistMenu(event) {
     if(event.target.className === "playlist") {
         currentPlaylistMenu.querySelectorAll(".song").forEach(song => song.remove())
@@ -76,7 +97,7 @@ function selectPlaylist(arr) {
     for(let src of arr) {
         let song = document.createElement("div");
         song.className = "song";
-        song.innerHTML = default_audio[src].name || src;
+        song.innerHTML = default_audio[src]?.name || addPlaylistInBasic(src);
         song.dataset.src = src;
 
         currentPlaylistMenu.append(song);
@@ -111,8 +132,8 @@ function playPauseSong() {
     };
     playerData.isPlay = !playerData.isPlay;
 
-    nameCurrentSong.innerHTML = default_audio[playerData.currentSong].name;
-    autorCurrentSong.innerHTML = default_audio[playerData.currentSong].autor;
+    nameCurrentSong.innerHTML = default_audio[playerData.currentSong]?.name;
+    autorCurrentSong.innerHTML = default_audio[playerData.currentSong]?.autor;
 };
 
 function onSpacePress(event) {
@@ -187,8 +208,8 @@ audio.addEventListener("ended", playRepeatAgainSong);
 
 document.addEventListener("keydown", onSpacePress);
 
-//slider.addEventListener("mousedown", moveSlider);
 slider.addEventListener("change", updateCurrentTime);
+
 
 
 // создаём несколько плейлистов для теста

@@ -59,6 +59,13 @@ fieldset {
     margin-right: auto;
     overflow: auto;
 }
+.header {
+    display: flex;
+    width: 100%;
+}
+#newPlaylist {
+    margin-left: auto;
+}
 
 
 
