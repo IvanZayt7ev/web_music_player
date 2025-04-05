@@ -20,180 +20,90 @@ const default_audio = {
         "autor": "Tchaikovsky",
     },
 }
-const tchaikovsky_playlist = [
-    "audioFiles/Tchaikovsky - Piano Concerto No. 1.webm",
-    "audioFiles/Tchaikovsky - Waltz of the Flowers (The Nutcracker Suite).webm",
-]
-const classicMusic = Object.keys(default_audio);
 
 
 
-// елементы пользовательского интерфейса
-const currentSongMenu = document.getElementById("currentSong");
-const currentPlaylistMenu = document.getElementById("currentPlaylist");
-const playlistsMenu = document.getElementById("playlists");
-const nameCurrentSong = document.getElementById("nameCurrentSong");
-const autorCurrentSong = document.getElementById("autorCurrentSong");
-// кнопки управления песнями
-const buttonPlay = document.getElementById("buttonPlay");
-const buttonPrevious = document.getElementById("buttonPrevious");
-const buttonNext = document.getElementById("buttonNext");
-const buttonLoop = document.getElementById("repeat");
-let slider = document.getElementById("slider");
-let timelineSong = document.getElementById("timelineSong");
+const playlistsContainer = document.getElementById("playlistsContainer").querySelector("div");
+const musicContainer = document.getElementById("musicContainer").querySelector("div");
+
+const playButton = document.getElementById("playButton");
+const previousButton = document.getElementById("previousButton");
+const nextButton = document.getElementById("nextButton");
+const timeRange  = document.getElementById("timeRange");
+const volumeRange = document.getElementById("volumeRange");
+const miniPlayerButton = document.getElementById("miniPlayerButton");
+
 
 let audio = new Audio();
-let playerData = {
+let audioData = {
     currentPlaylist: null,
-    currentSong: null,
-    currentSongTime: 0,
+    currentMusic: null,
+    currentMusicTime: 0,
     isPlay: false,
     isLoop: false,
 };
-let selectedPlaylist = null;
 
-function createPlaylist(arrPlaylist, namePlaylist) {
-    let playlist = document.createElement("div");
-    playlist.className = "playlist";
-    playlist.innerHTML = namePlaylist || "undefined name";
-    playlist.dataset.songs = JSON.stringify(arrPlaylist);
-
-    playlistsMenu.append(playlist);
+let playerData = {
+    playlists: {
+        "basic playlist": Object.keys(default_audio),
+        "Tchaikovsky": [
+            "audioFiles/Tchaikovsky - Piano Concerto No. 1.webm",
+            "audioFiles/Tchaikovsky - Waltz of the Flowers (The Nutcracker Suite).webm",
+        ],
+    },
+    selectedPlaylist: null,
 }
 
-function updateCurrentPlaylistMenu(event) {
-    if(event.target.className === "playlist") {
-        currentPlaylistMenu.querySelectorAll(".song").forEach(song => song.remove())
+function showPlaylistUI() {
+    playlistsContainer.querySelectorAll(".playlist").forEach(playlist => playlist.remove())
 
-        selectedPlaylist = JSON.parse(event.target.dataset.songs);
-        selectPlaylist(selectedPlaylist)
+    for(let [playlist, arrayMusic] of Object.entries(playerData.playlists)) {
+        let playlistDIV = document.createElement("div");
+        playlistDIV.className = "playlist";
+        playlistDIV.innerHTML = playlist;
+        playlistDIV.dataset.arrayMusic = JSON.stringify(arrayMusic);
+        //playlistDIV.dataset.namePlaylist = playlist;
+
+        playlistsContainer.append(playlistDIV);
     }
 }
 
-function selectPlaylist(arr) {
-    selectedPlaylist = arr;
+function showSelectedPlaylistUI() {
+    musicContainer.querySelectorAll(".music").forEach(music => music.remove())
 
-    for(let src of arr) {
-        let song = document.createElement("div");
-        song.className = "song";
-        song.innerHTML = default_audio[src].name || src;
-        song.dataset.src = src;
+    let arrayMusic = playerData.selectedPlaylist
+    for(let music of arrayMusic) {
+        let musicDIV = document.createElement("div");
+        musicDIV.className = "music";
+        musicDIV.innerHTML = default_audio[music].name;
+        musicDIV.dataset.srcMusic = JSON.stringify(music);
+        //musicDIV.dataset.fromPlaylist = namePlaylist;
 
-        currentPlaylistMenu.append(song);
+        musicContainer.append(musicDIV);
     }
 }
 
-function setSong(event) {
-    if(event.target.className === "song") {
-        playerData.currentSong = event.target.dataset.src;
-        playerData.currentPlaylist = selectedPlaylist;
-        playerData.currentSongTime = 0;
-        playerData.isPlay = false;
-
-        playPauseSong();
-    };
-};
-
-function playPauseSong() {
-    if(playerData.isPlay) {
-        playerData.currentSongTime = audio.currentTime;
-        buttonPlay.querySelector("img").src = "icons/play_button.png";
-        audio.pause();
-    } else {
-        if(playerData.currentSong !== null) {
-            audio.src = playerData.currentSong;
-            audio.currentTime = playerData.currentSongTime;
-        } else {
-            playerData.currentSong = audio.src = playerData.currentPlaylist[0];
-        }
-        buttonPlay.querySelector("img").src = "icons/pause_button.png";
-        audio.play();
-    };
-    playerData.isPlay = !playerData.isPlay;
-
-    nameCurrentSong.innerHTML = default_audio[playerData.currentSong].name;
-    autorCurrentSong.innerHTML = default_audio[playerData.currentSong].autor;
-};
-
-function onSpacePress(event) {
-    if(event.code == "Space") {
-        event.preventDefault();
-        playPauseSong();
+function selectPlaylistUI(event) {
+    if(event.target.className == "playlist") {
+        playerData.selectedPlaylist = JSON.parse(event.target.dataset.arrayMusic);
+        showSelectedPlaylistUI();
     }
 }
 
-function playPreviousSong() {
-    let indexSong = playerData.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist.at(-1)));
-    if(indexSong != 0) {
-        playerData.currentSong = playerData.currentPlaylist[indexSong - 1];
-    } else {
-        playerData.currentSong = playerData.currentPlaylist.at(-1);
-    }
-    playerData.currentTime = audio.currentTime = 0;
-    playerData.isPlay = false;
-    playPauseSong();
-}
-
-function playNextSong() {
-    let indexSong = playerData.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist[0]));
-    if(indexSong != playerData.currentPlaylist.length - 1) {
-        playerData.currentSong = playerData.currentPlaylist[indexSong + 1];
-    } else {
-        playerData.currentSong = playerData.currentPlaylist[0];
-    }
-    playerData.currentTime = audio.currentTime = 0;
-    playerData.isPlay = false;
-    playPauseSong();
-};
-
-function playInLoop() {
-    playerData.isLoop = !playerData.isLoop;
-    if(playerData.isLoop) {
-        buttonLoop.querySelector("img").src = "icons/repeat_on_button.png";
-    } else {
-        buttonLoop.querySelector("img").src = "icons/repeat_off_button.png";
+function selectMusicUI(event) {
+    if(event.target.className == "music") {
+        //audioData.currentPlaylist = event.target.fromPlaylist;
+        audioData.currentMusic = JSON.parse(event.target.dataset);
     }
 }
 
-function playRepeatAgainSong() {
-    playerData.isPlay = false;
-    if(playerData.isLoop) {
-        playerData.currentSongTime = 0;
-        audio.playPauseSong();
-    } else {
-        playNextSong()
-    }
-}
 
-setInterval(function() {
-    slider.value = (audio.currentTime / audio.duration * 100) || 0;
-}, 500);
 
-function updateCurrentTime() {
-    audio.currentTime = slider.value * audio.duration / 100;
-}
+playerData.selectedPlaylist = playerData.playlists["Tchaikovsky"]
+showSelectedPlaylistUI();
+showPlaylistUI();
 
 
 
-playlistsMenu.addEventListener("click", updateCurrentPlaylistMenu);
-currentPlaylistMenu.addEventListener("click", setSong);
-
-buttonPlay.addEventListener("click", playPauseSong);
-buttonPrevious.addEventListener("click", playPreviousSong);
-buttonNext.addEventListener("click", playNextSong);
-buttonLoop.addEventListener("click", playInLoop);
-
-audio.addEventListener("ended", playRepeatAgainSong);
-
-document.addEventListener("keydown", onSpacePress);
-
-//slider.addEventListener("mousedown", moveSlider);
-slider.addEventListener("change", updateCurrentTime);
-
-
-// создаём несколько плейлистов для теста
-createPlaylist(classicMusic, "Classic music");
-createPlaylist(tchaikovsky_playlist, "Tchaikovsky");
-
-selectPlaylist(classicMusic);
-playerData.currentPlaylist = classicMusic;
+playlistsContainer.addEventListener("click", selectPlaylistUI)
+musicContainer.addEventListener("click", selectMusicUI)

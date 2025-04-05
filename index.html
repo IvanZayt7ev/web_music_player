@@ -19,34 +19,52 @@
 
             <!--контейнер с плейлистами-->
             <div id="playlistsContainer" class="contentContainer">
-
+                <div></div>
             </div>
         </div>
         <div class="rightContainer">
 
             <!--контейнер с музыкой текущего плейлиста-->
             <div id="musicContainer" class="contentContainer">
-
+                <div></div>
             </div>
 
             <!--панель для управления текущей музыкой-->
             <div id="hotbarContainer">
                 <div class="gridContainer">
                     <div class="flexContainer">
-                        <h1 id="musicName">name song</h1><h1 id="musicTime">00:00 / 00:00</h1>
+                        <h1 id="musicName">name song</h1><h1 id="indicatorMusicTime">00:00 / 00:00</h1>
                     </div>
-                    <input type="range">
+                    <input id="timeRange" type="range">
                     <div class="buttonContainer">
-                        <div class="button"></div>
-                        <div class="button"></div>
-                        <div class="button"></div>
-                        <div class="button"></div>
+                        <div class="sideContainer">
+                            <h2>volume</h2>
+                            <div class="volumeContainer">
+                                <input id="volumeRange" type="range"><p id="indicatorVolume">50%</p>
+                            </div>
+                        </div>
+                        <div class="mainButtonsContainer">
+                            <div class="button"></div>
+                            <div id="previousButton" class="button">
+                                <img>
+                            </div>
+                            <div id="playButton" class="button">
+                                <img>
+                            </div>
+                            <div id="nextButton" class="button">
+                                <img>
+                            </div>
+                            <div class="button"></div>
+                        </div>
+                        <div class="sideContainer">
+                            <div id="miniPlayerButton" class="button"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script ></script>
+    <script src="musicPlayerScript.js"></script>
 </body>
 </html>
