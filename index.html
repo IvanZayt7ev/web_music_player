@@ -12,9 +12,9 @@
 
             <!---->
             <div id="settingsbarContainer">
-                <div class="buttonMenu"></div>
-                <div class="buttonMenu"></div>
-                <div class="buttonMenu"></div>
+                <div class="button"></div>
+                <div class="button centralPosition"></div>
+                <div class="button"></div>
             </div>
 
             <!--контейнер с плейлистами-->
@@ -40,20 +40,22 @@
                         <div class="sideContainer">
                             <h2>volume</h2>
                             <div class="volumeContainer">
-                                <input id="volumeRange" type="range" min="0" max="100" step="1" value="100">
-                                <p id="indicatorVolume">50%</p>
+                                <input id="volumeRange" type="range" min="0" max="1" step="0.01" value="1">
+                                <p id="indicatorVolume">100%</p>
                             </div>
                         </div>
                         <div class="mainButtonsContainer">
                             <div class="button"></div>
-                            <div id="previousButton" class="button">
-                                <img>
-                            </div>
-                            <div id="playButton" class="button">
-                                <img>
-                            </div>
-                            <div id="nextButton" class="button">
-                                <img>
+                            <div class="centralPosition">
+                                <div id="previousButton" class="button">
+                                    <img src="icons/previous_button.png">
+                                </div>
+                                <div id="playButton" class="button">
+                                    <img src="icons/play_button.png">
+                                </div>
+                                <div id="nextButton" class="button">
+                                    <img src="icons/next_button.png">
+                                </div>
                             </div>
                             <div class="button"></div>
                         </div>

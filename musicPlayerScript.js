@@ -99,8 +99,6 @@ function selectPlaylistUI(event) {
 
 function selectMusicUI(event) {
     if(event.target.className === "music") {
-        musicName.innerHTML = default_audio[event.target.dataset.srcMusic].name
-
         audioData.currentPlaylist = event.target.dataset.fromPlaylist;
         audioData.currentMusic = event.target.dataset.srcMusic;
         audioData.currentMusicTime = 0;
@@ -114,12 +112,14 @@ function playMusic() {
     if(audioData.isPlay) {
         audioData.currentMusicTime = audio.currentTime;
         audio.pause()
-        playButton.style.background = "white";
+        playButton.querySelector("img").src = "icons/play_button.png"
     } else {
         audio.src = audioData.currentMusic || audioData.currentPlaylist[0];
         audio.currentTime = audioData.currentMusicTime;
         audio.play()
-        playButton.style.background = "red"
+        playButton.querySelector("img").src = "icons/pause_button.png"
+
+        musicName.innerHTML = default_audio[audioData.currentMusic || audioData.currentPlaylist[0]].name
     }
     audioData.isPlay = !audioData.isPlay
 }
@@ -163,14 +163,14 @@ function changeTimeRange() {
     }
 }
 function onArrowLeftPress(event) {
-    if(event.code == "ArrowLeft") {
+    if(event.code === "ArrowLeft") {
         event.preventDefault();
         audio.currentTime -= 5;
         updateTimeRangeSlider();
     }
 }
 function onArrowRightPress(event) {
-    if(event.code == "ArrowRight") {
+    if(event.code === "ArrowRight") {
         event.preventDefault();
         audio.currentTime += 5;
         updateTimeRangeSlider();
@@ -179,21 +179,24 @@ function onArrowRightPress(event) {
 
 // Часть кода ответственная за изменение и отображение громкости
 
-function changeVoluneRange() {
-    if(audio.src) {
-        audio.volume = volumeRangeSlider.value;
-    }
+function changeVolumeRange() {
+    indicatorVolumeMusic.innerHTML = `${Math.round(volumeRangeSlider.value * 100)}%`;
+    audio.volume = volumeRangeSlider.value;
 }
 function onArrowUpPress(event) {
-    if(event.code == "ArrowLeft") {
+    if(event.code === "ArrowUp") {
         event.preventDefault();
-        audio.volume += 5;
+        audio.volume += 0.05;
+        volumeRangeSlider.value = audio.volume;
+        indicatorVolumeMusic.innerHTML = `${Math.round(volumeRangeSlider.value * 100)}%`;
     }
 }
 function onArrowDownPress(event) {
-    if(event.code == "ArrowRight") {
+    if(event.code === "ArrowDown") {
         event.preventDefault();
-        audio.volume -= 5;
+        audio.volume -= 0.05;
+        volumeRangeSlider.value = audio.volume;
+        indicatorVolumeMusic.innerHTML = `${Math.round(volumeRangeSlider.value * 100)}%`;
     }
 }
 
@@ -203,6 +206,7 @@ audioData.currentPlaylist = playerData.playlists["Tchaikovsky"];
 playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]];
 showSelectedPlaylistUI();
 showPlaylistUI();
+changeVolumeRange()
 
 
 
@@ -210,9 +214,11 @@ playlistsContainer.addEventListener("click", selectPlaylistUI);
 musicContainer.addEventListener("click", selectMusicUI);
 
 timeRangeSlider.addEventListener("change", changeTimeRange);
-volumeRangeSlider.addEventListener("change", changeVoluneRange);
+volumeRangeSlider.addEventListener("change", changeVolumeRange);
 
 playButton.addEventListener("click", playMusic);
 document.addEventListener("keydown", onSpacePress);
 document.addEventListener("keydown", onArrowLeftPress);
 document.addEventListener("keydown", onArrowRightPress);
+document.addEventListener("keydown", onArrowUpPress);
+document.addEventListener("keydown", onArrowDownPress);

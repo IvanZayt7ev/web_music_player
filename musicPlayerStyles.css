@@ -21,6 +21,8 @@ body {
     height: 50px;
     background: #051437;
     display: flex;
+    margin-left: 1vw;
+    margin-right: 1vw;
 }
 
 #playlistsContainer {
@@ -106,14 +108,18 @@ body {
     margin-left: auto;
 }
 
+.centralPosition {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 
 .button {
     height: 100%;
     width: 90px;
-    background: white;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
 }
 .buttonMenu {
     height: 30px;
@@ -129,4 +135,9 @@ h1, h2, h3, p {
     height: 30px;
     margin: 0;
     padding: 0;
+}
+img {
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
