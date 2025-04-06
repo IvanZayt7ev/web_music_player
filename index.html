@@ -7,99 +7,77 @@
     <title>Music player</title>
 </head>
 <body>
-    <div id="musicPlayer">
+    <div class="playerContainer">
+        <div class="leftContainer">
 
-        <div id="songManager">
-            <div id="currentSongMenu">
-                <!--вкладка с информацией о текущей песне-->
-
-                <!-- ???для JS нужен только этот "div"??? -->
-                <div class="innerContent">
-                    <img id="imageSong" src="icons/placeholder.png" alt-src="placeholder.png">
-                    <fieldset>
-                        <legend>name</legend>
-                        <p id="nameCurrentSong">name song</p>
-                    </fieldset>
-                    <fieldset>
-                        <legend>author</legend>
-                        <p id="autorCurrentSong">author song</p>
-                    </fieldset>
-                    <fieldset>
-                        <legend>extra</legend>
-                        <p>song release date: <p id="releaseCurrentSong"></p></p>
-                        <p>album: <p id="albumCurrentSong"></p></p>
-                        <p>type of music: <p id="typeCurrentSong"></p></p>
-                    </fieldset>
+            <!---->
+            <div id="settingsbarContainer">
+                <div class="button"></div>
+                <div class="button centralPosition"></div>
+                <div id ="editMenuButton" class="button">
+                    <img src="icons/add_button.png">
                 </div>
             </div>
-            <div id="currentPlaylistMenu">
-                <!--вкладка с песнями текущего плейлиста-->
-                <div class="innerContent">
-                    <h2 id="nameCurrentPlaylist">name playlist</h2>
 
-                    <!-- для JS нужен только этот "div" -->
-                    <div id="currentPlaylist">
 
-                    </div>
-                </div>
+            <!--контейнер с плейлистами-->
+            <div id="playlistsContainer" class="contentContainer">
+                <div></div>
             </div>
-            <div id="playlistsMenu">
-                <!--вкладка со всеми плейлистами-->
-                <div class="innerContent">
-                    <h2 id="namePlaylistsMenu">playlists menu</h2>
-                    <!-- для JS нужен только этот "div" -->
-                    <div id="playlists" class="playlists">
+        </div>
+        <div class="rightContainer">
 
+            <!--контейнер с музыкой текущего плейлиста-->
+            <div id="musicContainer" class="contentContainer">
+                <div></div>
+            </div>
+
+            <!--панель для управления выбранной музыкой-->
+            <div id="hotbarContainer">
+                <div class="gridContainer">
+                    <div class="flexContainer">
+                        <h1 id="musicName">name song</h1><h1 id="indicatorMusicTime">00:00 / 00:00</h1>
                     </div>
-                    <div class="playlist">
-                        <input type="file" accept=".json" onchange="addNewPlaylist(this)">
+                    <input id="timeRange" type="range" min="0" max="100" step="1" value="0">
+                    <div class="buttonContainer">
+                        <div class="sideContainer">
+                            <h2>volume</h2>
+                            <div class="volumeContainer">
+                                <input id="volumeRange" type="range" min="0" max="1" step="0.01" value="1">
+                                <p id="indicatorVolume">100%</p>
+                            </div>
+                        </div>
+                        <div class="mainButtonsContainer">
+                            <div class="button">
+                                <img src="icons/repeat_off_button.png">
+                            </div>
+                            <div class="centralPosition">
+                                <div id="previousButton" class="button">
+                                    <img src="icons/previous_button.png">
+                                </div>
+                                <div id="playButton" class="button">
+                                    <img src="icons/play_button.png">
+                                </div>
+                                <div id="nextButton" class="button">
+                                    <img src="icons/next_button.png">
+                                </div>
+                            </div>
+                            <div class="button">
+                                <img>
+                            </div>
+                        </div>
+                        <div class="sideContainer">
+                            <div id="miniPlayerButton" class="button">
+                                <img src="icons/miniPlayer_off_button.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div id="bar">
-            <!--вкладка с таймлайном текущей песни и др. кнопками-->
-            <div id="timeline">
-                <div id="timeSlider">
-                    <div id="sliderContainer">
-                        <!--ползунок таймлайна текущей песни-->
-                        <input id="slider" type="range" min="0" max="100" step="1" value="0">
-                    </div>
-                </div>
-            </div>
-
-            <div id="buttonsBar">
-                <div class="contarinerButtons">
-                    <div id="buttons">
-
-                        <div id="repeat">
-                            <!--кнопка зацикливания текущей песни-->
-                            <img src="icons/repeat_off_button.png" class="imageButton">
-                        </div>
-
-                        <!--кнопки "предыдущая песня" "воспроизвести/пауза" "следующая песня"-->
-                        <div id="buttonPrevious">
-                            <img src="icons/previous_button.png" class="imageButton">
-                        </div>
-                        <div id="buttonPlay">
-                            <img src="icons/play_button.png" class="imageButton">
-                        </div>
-                        <div id="buttonNext">
-                            <img src="icons/next_button.png" class="imageButton">
-                        </div>
-
-
-                        <div id="likeButton" onclick="whatDuration()">
-                            <!--кнопка "нравится"-->
-                            <img src="icons/like_off_button.png" class="imageButton">
-                        </div>
-
-                    </div>
-                </div>
-        </div>
-
     </div>
+
+    <!--div id="editMenu"></div-->
 
     <script src="musicPlayerScript.js"></script>
 </body>

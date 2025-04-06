@@ -20,137 +20,116 @@ const default_audio = {
         "autor": "Tchaikovsky",
     },
 }
-const tchaikovsky_playlist = [
-    "audioFiles/Tchaikovsky - Piano Concerto No. 1.webm",
-    "audioFiles/Tchaikovsky - Waltz of the Flowers (The Nutcracker Suite).webm",
-]
-const all_tracks = Object.keys(default_audio);
+
+const playlistsContainer = document.getElementById("playlistsContainer").querySelector("div");
+const musicContainer = document.getElementById("musicContainer").querySelector("div");
+const editMenu = document.getElementById("editMenu")
+
+const editMenuButton = document.getElementById("editMenuButton");
+
+const playButton = document.getElementById("playButton");
+const previousButton = document.getElementById("previousButton");
+const nextButton = document.getElementById("nextButton");
+const miniPlayerButton = document.getElementById("miniPlayerButton");
+
+const musicName = document.getElementById("musicName");
+
+const timeRangeSlider  = document.getElementById("timeRange");
+const indicatorMusicTime = document.getElementById("indicatorMusicTime");
+
+const volumeRangeSlider = document.getElementById("volumeRange");
+const indicatorVolumeMusic = document.getElementById("indicatorVolume");
 
 
-
-// елементы пользовательского интерфейса
-const currentSongMenu = document.getElementById("currentSong");
-const currentPlaylistMenu = document.getElementById("currentPlaylist");
-const playlistsMenu = document.getElementById("playlists");
-const nameCurrentSong = document.getElementById("nameCurrentSong");
-const autorCurrentSong = document.getElementById("autorCurrentSong");
-
-// кнопки управления песнями
-const buttonPlay = document.getElementById("buttonPlay");
-const buttonPrevious = document.getElementById("buttonPrevious");
-const buttonNext = document.getElementById("buttonNext");
-const buttonLoop = document.getElementById("repeat");
-let slider = document.getElementById("slider");
-let timelineSong = document.getElementById("timelineSong");
 
 let audio = new Audio();
-let playerData = {
+let audioData = {
     currentPlaylist: null,
-    currentSong: null,
-    currentSongTime: 0,
+    currentMusic: null,
+    currentMusicTime: 0,
     isPlay: false,
     isLoop: false,
 };
-let selectedPlaylist = null;
 
-function createPlaylist(arrPlaylist, namePlaylist) {
-    let playlist = document.createElement("div");
-    playlist.className = "playlist";
-    playlist.innerHTML = namePlaylist || "undefined name";
-    playlist.dataset.songs = JSON.stringify(arrPlaylist);
-
-    playlistsMenu.append(playlist);
+let playerData = {
+    playlists: {
+        "basic playlist": Object.keys(default_audio),
+        "Tchaikovsky": [
+            "audioFiles/Tchaikovsky - Piano Concerto No. 1.webm",
+            "audioFiles/Tchaikovsky - Waltz of the Flowers (The Nutcracker Suite).webm",
+        ],
+    },
+    selectedPlaylist: null,
 }
 
-function addNewPlaylist(input) {
-    let file = input.files[0];
-    let reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function() {
-        let newPlaylistArr = JSON.parse(reader.result);
-        for(let newPlaylist of newPlaylistArr) {
-            addPlaylistInBasic(newPlaylist);
-            createPlaylist(newPlaylist, file.name.slice(0, file.name.lastIndexOf(".")));
-        }
+
+function showPlaylistUI() {
+    playlistsContainer.querySelectorAll(".playlist").forEach(playlist => playlist.remove())
+
+    for(let [playlist, arrayMusic] of Object.entries(playerData.playlists)) {
+        let playlistDIV = document.createElement("div");
+        playlistDIV.className = "playlist";
+        playlistDIV.innerHTML = playlist;
+        playlistDIV.dataset.NameAndArrayMusic = JSON.stringify([playlist, arrayMusic]);
+        playlistDIV.dataset.namePlaylist = playlist;
+
+        playlistsContainer.append(playlistDIV);
     }
 }
 
-function addPlaylistInBasic(arr) {
-    arr.forEach(checkTrack => {
-        if(!Object.keys(default_audio).includes(checkTrack)) {
-            default_audio[checkTrack] = {};
-            default_audio[checkTrack].name = checkTrack.slice(checkTrack.indexOf("/") + 1, checkTrack.lastIndexOf("."));
-        };
-    });
-    playlistsMenu.children[0].dataset.songs = JSON.stringify(Object.keys(default_audio));
-    if(playerData.currentPlaylist == all_tracks) {
-        currentPlaylistMenu.querySelectorAll(".song").forEach(song => song.remove())
-        selectPlaylist(Object.keys(default_audio))
+function showSelectedPlaylistUI() {
+    musicContainer.querySelectorAll(".music").forEach(music => music.remove())
+
+
+    let [namePlaylist, arrayMusic] = playerData.selectedPlaylist
+    for(let music of arrayMusic) {
+        let musicDIV = document.createElement("div");
+        musicDIV.className = "music";
+        musicDIV.innerHTML = default_audio[music].name;
+        musicDIV.dataset.srcMusic = music;
+        musicDIV.dataset.fromPlaylist = namePlaylist;
+
+        musicContainer.append(musicDIV);
     }
 }
 
-function getNameFromSrc(src) {
-    return src.slice(src.indexOf("/") + 1, src.lastIndexOf("."));
-}
-
-function updateCurrentPlaylistMenu(event) {
+function selectPlaylistUI(event) {
     if(event.target.className === "playlist") {
-        currentPlaylistMenu.querySelectorAll(".song").forEach(song => song.remove())
-
-        selectedPlaylist = JSON.parse(event.target.dataset.songs);
-        selectPlaylist(selectedPlaylist)
+        playerData.selectedPlaylist = JSON.parse(event.target.dataset.NameAndArrayMusic);
+        showSelectedPlaylistUI();
     }
 }
 
-function selectPlaylist(arr) {
-    selectedPlaylist = arr;
+function selectMusicUI(event) {
+    if(event.target.className === "music") {
+        audioData.currentPlaylist = event.target.dataset.fromPlaylist;
+        audioData.currentMusic = event.target.dataset.srcMusic;
+        audioData.currentMusicTime = 0;
+        audioData.isPlay = false;
 
-    for(let src of arr) {
-        let song = document.createElement("div");
-        song.className = "song";
-        song.innerHTML = default_audio[src]?.name || getNameFromSrc(src);
-        song.dataset.src = src;
-
-        currentPlaylistMenu.append(song);
+        playMusic();
     }
 }
 
-function setSong(event) {
-    if(event.target.className === "song") {
-        playerData.currentSong = event.target.dataset.src;
-        playerData.currentPlaylist = selectedPlaylist;
-        playerData.currentSongTime = 0;
-        playerData.isPlay = false;
-
-        playPauseSong();
-    };
-};
-
-function playPauseSong() {
-    if(playerData.isPlay) {
-        playerData.currentSongTime = audio.currentTime;
-        buttonPlay.querySelector("img").src = "icons/play_button.png";
-        audio.pause();
+function playMusic() {
+    if(audioData.isPlay) {
+        audioData.currentMusicTime = audio.currentTime;
+        audio.pause()
+        playButton.querySelector("img").src = "icons/play_button.png"
     } else {
-        if(playerData.currentSong !== null) {
-            audio.src = playerData.currentSong;
-            audio.currentTime = playerData.currentSongTime;
-        } else {
-            playerData.currentSong = audio.src = playerData.currentPlaylist[0];
-        }
-        buttonPlay.querySelector("img").src = "icons/pause_button.png";
-        audio.play();
-    };
-    playerData.isPlay = !playerData.isPlay;
+        audio.src = audioData.currentMusic || audioData.currentPlaylist[0];
+        audio.currentTime = audioData.currentMusicTime;
+        audio.play()
+        playButton.querySelector("img").src = "icons/pause_button.png"
 
-    nameCurrentSong.innerHTML = default_audio[playerData.currentSong]?.name;
-    autorCurrentSong.innerHTML = default_audio[playerData.currentSong]?.autor;
-};
-
+        musicName.innerHTML = default_audio[audioData.currentMusic || audioData.currentPlaylist[0]].name
+    }
+    audioData.isPlay = !audioData.isPlay
+}
 function onSpacePress(event) {
-    if(event.code == "Space") {
+    if(event.code === "Space") {
         event.preventDefault();
-        playPauseSong();
+        playMusic();
     }
 }
 function onArrowLeftPress(event) {
@@ -166,80 +145,102 @@ function onArrowRightPress(event) {
     }
 }
 
-function playPreviousSong() {
-    let indexSong = playerData.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist.at(-1)));
-    if(indexSong != 0) {
-        playerData.currentSong = playerData.currentPlaylist[indexSong - 1];
-    } else {
-        playerData.currentSong = playerData.currentPlaylist.at(-1);
-    }
-    playerData.currentTime = audio.currentTime = 0;
-    playerData.isPlay = false;
-    playPauseSong();
+/*
+function nextMusic() {
+    //
 }
 
-function playNextSong() {
-    let indexSong = playerData.currentPlaylist.indexOf((playerData?.currentSong || playerData.currentPlaylist[0]));
-    if(indexSong != playerData.currentPlaylist.length - 1) {
-        playerData.currentSong = playerData.currentPlaylist[indexSong + 1];
-    } else {
-        playerData.currentSong = playerData.currentPlaylist[0];
-    }
-    playerData.currentTime = audio.currentTime = 0;
-    playerData.isPlay = false;
-    playPauseSong();
-};
+function previousMusic() {
+    //
+}
 
-function playInLoop() {
-    playerData.isLoop = !playerData.isLoop;
-    if(playerData.isLoop) {
-        buttonLoop.querySelector("img").src = "icons/repeat_on_button.png";
-    } else {
-        buttonLoop.querySelector("img").src = "icons/repeat_off_button.png";
+// Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
+function openEditMenuUI() {
+    editMenu.style.visibility = "visible"
+    alert("hee")
+}
+*/
+
+// Часть когда ответственная за отображение времени и его изменения с помощью слайдера
+// перевод секунд в часы:минуты:секунды, возвращает строку
+function formatTime(sec) {
+    let hours = Math.round(sec / 3600)
+    let minutes = sec >= 3600 ? `0${Math.round(sec % 3600 / 60)}` : Math.round(sec % 3600 / 60)
+    let seconds = sec % 60 < 10 ? `0${Math.round(sec % 60)}` : Math.round(sec % 60);
+    return sec >= 3600 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+}
+// обновление отображения текущего времени / всего времени и позиции ползунка
+function updateTimeRangeSlider() {
+    indicatorMusicTime.innerHTML = formatTime(audio.currentTime) + " / " + (audio.duration ? formatTime(audio.duration) : "0:00");
+    timeRangeSlider.value = audio.currentTime / audio.duration * 100 || 0;
+}
+setInterval(updateTimeRangeSlider, 500);
+
+function changeTimeRange() {
+    if(audio.src) {
+        audioData.currentMusicTime = audio.currentTime = timeRangeSlider.value * audio.duration / 100;
+        updateTimeRangeSlider();
+    }
+}
+function onArrowLeftPress(event) {
+    if(event.code === "ArrowLeft") {
+        event.preventDefault();
+        audio.currentTime -= 5;
+        updateTimeRangeSlider();
+    }
+}
+function onArrowRightPress(event) {
+    if(event.code === "ArrowRight") {
+        event.preventDefault();
+        audio.currentTime += 5;
+        updateTimeRangeSlider();
     }
 }
 
-function playRepeatAgainSong() {
-    playerData.isPlay = false;
-    if(playerData.isLoop) {
-        playerData.currentSongTime = 0;
-        audio.play();
-    } else {
-        playNextSong()
+// Часть кода ответственная за изменение и отображение громкости
+
+function changeVolumeRange() {
+    indicatorVolumeMusic.innerHTML = `${Math.round(volumeRangeSlider.value * 100)}%`;
+    audio.volume = volumeRangeSlider.value;
+}
+function onArrowUpPress(event) {
+    if(event.code === "ArrowUp") {
+        event.preventDefault();
+        audio.volume += 0.05;
+        volumeRangeSlider.value = audio.volume;
+        indicatorVolumeMusic.innerHTML = `${Math.round(volumeRangeSlider.value * 100)}%`;
+    }
+}
+function onArrowDownPress(event) {
+    if(event.code === "ArrowDown") {
+        event.preventDefault();
+        audio.volume -= 0.05;
+        volumeRangeSlider.value = audio.volume;
+        indicatorVolumeMusic.innerHTML = `${Math.round(volumeRangeSlider.value * 100)}%`;
     }
 }
 
-setInterval(function() {
-    slider.value = (audio.currentTime / audio.duration * 100) || 0;
-}, 500);
-
-function updateCurrentTime() {
-    audio.currentTime = slider.value * audio.duration / 100;
-}
 
 
+audioData.currentPlaylist = playerData.playlists["Tchaikovsky"];
+playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]];
+showSelectedPlaylistUI();
+showPlaylistUI();
+changeVolumeRange()
 
-playlistsMenu.addEventListener("click", updateCurrentPlaylistMenu);
-currentPlaylistMenu.addEventListener("click", setSong);
 
-buttonPlay.addEventListener("click", playPauseSong);
-buttonPrevious.addEventListener("click", playPreviousSong);
-buttonNext.addEventListener("click", playNextSong);
-buttonLoop.addEventListener("click", playInLoop);
 
-audio.addEventListener("ended", playRepeatAgainSong);
+playlistsContainer.addEventListener("click", selectPlaylistUI);
+musicContainer.addEventListener("click", selectMusicUI);
 
+timeRangeSlider.addEventListener("change", changeTimeRange);
+volumeRangeSlider.addEventListener("change", changeVolumeRange);
+
+playButton.addEventListener("click", playMusic);
 document.addEventListener("keydown", onSpacePress);
 document.addEventListener("keydown", onArrowLeftPress);
 document.addEventListener("keydown", onArrowRightPress);
+document.addEventListener("keydown", onArrowUpPress);
+document.addEventListener("keydown", onArrowDownPress);
 
-slider.addEventListener("change", updateCurrentTime);
-
-
-
-// создаём несколько плейлистов для теста
-createPlaylist(all_tracks, "all music");
-createPlaylist(tchaikovsky_playlist, "Tchaikovsky");
-
-selectPlaylist(all_tracks);
-playerData.currentPlaylist = all_tracks;
+editMenuButton.addEventListener("click", openEditMenuUI);
