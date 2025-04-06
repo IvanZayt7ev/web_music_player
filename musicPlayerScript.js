@@ -25,6 +25,9 @@ const default_audio = {
 
 const playlistsContainer = document.getElementById("playlistsContainer").querySelector("div");
 const musicContainer = document.getElementById("musicContainer").querySelector("div");
+const editMenu = document.getElementById("editMenu")
+
+const editMenuButton = document.getElementById("editMenuButton");
 
 const playButton = document.getElementById("playButton");
 const previousButton = document.getElementById("previousButton");
@@ -130,6 +133,7 @@ function onSpacePress(event) {
     }
 }
 
+/*
 function nextMusic() {
     //
 }
@@ -138,10 +142,14 @@ function previousMusic() {
     //
 }
 
-
+// Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
+function openEditMenuUI() {
+    editMenu.style.visibility = "visible"
+    alert("hee")
+}
+*/
 
 // Часть когда ответственная за отображение времени и его изменения с помощью слайдера
-
 // перевод секунд в часы:минуты:секунды, возвращает строку
 function formatTime(sec) {
     let hours = Math.round(sec / 3600)
@@ -222,3 +230,5 @@ document.addEventListener("keydown", onArrowLeftPress);
 document.addEventListener("keydown", onArrowRightPress);
 document.addEventListener("keydown", onArrowUpPress);
 document.addEventListener("keydown", onArrowDownPress);
+
+editMenuButton.addEventListener("click", openEditMenuUI);

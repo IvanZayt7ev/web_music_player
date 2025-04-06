@@ -14,7 +14,9 @@
             <div id="settingsbarContainer">
                 <div class="button"></div>
                 <div class="button centralPosition"></div>
-                <div class="button"></div>
+                <div id ="editMenuButton" class="button">
+                    <img src="icons/add_button.png">
+                </div>
             </div>
 
             <!--контейнер с плейлистами-->
@@ -29,7 +31,7 @@
                 <div></div>
             </div>
 
-            <!--панель для управления текущей музыкой-->
+            <!--панель для управления выбранной музыкой-->
             <div id="hotbarContainer">
                 <div class="gridContainer">
                     <div class="flexContainer">
@@ -45,7 +47,9 @@
                             </div>
                         </div>
                         <div class="mainButtonsContainer">
-                            <div class="button"></div>
+                            <div class="button">
+                                <img src="icons/repeat_off_button.png">
+                            </div>
                             <div class="centralPosition">
                                 <div id="previousButton" class="button">
                                     <img src="icons/previous_button.png">
@@ -57,16 +61,22 @@
                                     <img src="icons/next_button.png">
                                 </div>
                             </div>
-                            <div class="button"></div>
+                            <div class="button">
+                                <img>
+                            </div>
                         </div>
                         <div class="sideContainer">
-                            <div id="miniPlayerButton" class="button"></div>
+                            <div id="miniPlayerButton" class="button">
+                                <img src="icons/miniPlayer_off_button.png">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!--div id="editMenu"></div-->
 
     <script src="musicPlayerScript.js"></script>
 </body>
