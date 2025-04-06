@@ -21,6 +21,8 @@ const default_audio = {
     },
 }
 
+
+
 const playlistsContainer = document.getElementById("playlistsContainer").querySelector("div");
 const musicContainer = document.getElementById("musicContainer").querySelector("div");
 const editMenu = document.getElementById("editMenu")
@@ -62,7 +64,6 @@ let playerData = {
     selectedPlaylist: null,
 }
 
-
 function showPlaylistUI() {
     playlistsContainer.querySelectorAll(".playlist").forEach(playlist => playlist.remove())
 
@@ -79,7 +80,6 @@ function showPlaylistUI() {
 
 function showSelectedPlaylistUI() {
     musicContainer.querySelectorAll(".music").forEach(music => music.remove())
-
 
     let [namePlaylist, arrayMusic] = playerData.selectedPlaylist
     for(let music of arrayMusic) {
@@ -130,18 +130,6 @@ function onSpacePress(event) {
     if(event.code === "Space") {
         event.preventDefault();
         playMusic();
-    }
-}
-function onArrowLeftPress(event) {
-    if(event.code == "ArrowLeft") {
-        event.preventDefault();
-        audio.currentTime -= 5;
-    }
-}
-function onArrowRightPress(event) {
-    if(event.code == "ArrowRight") {
-        event.preventDefault();
-        audio.currentTime += 5;
     }
 }
 
@@ -243,4 +231,4 @@ document.addEventListener("keydown", onArrowRightPress);
 document.addEventListener("keydown", onArrowUpPress);
 document.addEventListener("keydown", onArrowDownPress);
 
-editMenuButton.addEventListener("click", openEditMenuUI);
+//editMenuButton.addEventListener("click", openEditMenuUI);

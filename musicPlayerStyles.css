@@ -16,17 +16,15 @@ body {
     width: 30%;
     background: #081E50;
 }
-.header {
-    display: flex;
+
+.upperHotbar {
+    height: 50px;
     width: 100%;
-}
-#newPlaylist {
-    margin-left: auto;
+    background: #051437;
 }
 
 #settingsbarContainer {
-    height: 50px;
-    background: #051437;
+    height: 100%;
     display: flex;
     margin-left: 1vw;
     margin-right: 1vw;
