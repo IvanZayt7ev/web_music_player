@@ -61,8 +61,8 @@ function showPlaylistUI() {
         let playlistDIV = document.createElement("div");
         playlistDIV.className = "playlist";
         playlistDIV.innerHTML = playlist;
-        playlistDIV.dataset.arrayMusic = JSON.stringify(arrayMusic);
-        //playlistDIV.dataset.namePlaylist = playlist;
+        playlistDIV.dataset.NameAndArrayMusic = JSON.stringify([playlist, arrayMusic]);
+        playlistDIV.dataset.namePlaylist = playlist;
 
         playlistsContainer.append(playlistDIV);
     }
@@ -71,35 +71,52 @@ function showPlaylistUI() {
 function showSelectedPlaylistUI() {
     musicContainer.querySelectorAll(".music").forEach(music => music.remove())
 
-    let arrayMusic = playerData.selectedPlaylist
+    let [namePlaylist, arrayMusic] = playerData.selectedPlaylist
     for(let music of arrayMusic) {
         let musicDIV = document.createElement("div");
         musicDIV.className = "music";
         musicDIV.innerHTML = default_audio[music].name;
-        musicDIV.dataset.srcMusic = JSON.stringify(music);
-        //musicDIV.dataset.fromPlaylist = namePlaylist;
+        musicDIV.dataset.srcMusic = music;
+        musicDIV.dataset.fromPlaylist = namePlaylist;
 
         musicContainer.append(musicDIV);
     }
 }
 
 function selectPlaylistUI(event) {
-    if(event.target.className == "playlist") {
-        playerData.selectedPlaylist = JSON.parse(event.target.dataset.arrayMusic);
+    if(event.target.className === "playlist") {
+        playerData.selectedPlaylist = JSON.parse(event.target.dataset.NameAndArrayMusic);
         showSelectedPlaylistUI();
     }
 }
 
 function selectMusicUI(event) {
-    if(event.target.className == "music") {
-        //audioData.currentPlaylist = event.target.fromPlaylist;
-        audioData.currentMusic = JSON.parse(event.target.dataset);
+    if(event.target.className === "music") {
+        audioData.currentPlaylist = event.target.dataset.fromPlaylist;
+        audioData.currentMusic = event.target.dataset.srcMusic;
+        audioData.currentMusicTime = 0;
+        audioData.isPlay = false;
+
+        playMusic();
     }
+}
+
+function playMusic() {
+    if(audioData.isPlay) {
+        audioData.currentMusicTime = audio.currentTime;
+        audio.pause()
+    } else {
+        audio.src = audioData.currentMusic || audioData.currentPlaylist[0];
+        audio.currentTime = audioData.currentMusicTime;
+        audio.play()
+    }
+    audioData.isPlay = !audioData.isPlay
 }
 
 
 
-playerData.selectedPlaylist = playerData.playlists["Tchaikovsky"]
+audioData.currentPlaylist = playerData.playlists["Tchaikovsky"]
+playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]]
 showSelectedPlaylistUI();
 showPlaylistUI();
 
@@ -107,3 +124,5 @@ showPlaylistUI();
 
 playlistsContainer.addEventListener("click", selectPlaylistUI)
 musicContainer.addEventListener("click", selectMusicUI)
+
+playButton.addEventListener("click", playMusic)
