@@ -29,9 +29,16 @@ const musicContainer = document.getElementById("musicContainer").querySelector("
 const playButton = document.getElementById("playButton");
 const previousButton = document.getElementById("previousButton");
 const nextButton = document.getElementById("nextButton");
-const timeRange  = document.getElementById("timeRange");
-const volumeRange = document.getElementById("volumeRange");
 const miniPlayerButton = document.getElementById("miniPlayerButton");
+
+const musicName = document.getElementById("musicName");
+
+const timeRangeSlider  = document.getElementById("timeRange");
+const indicatorMusicTime = document.getElementById("indicatorMusicTime");
+
+const volumeRangeSlider = document.getElementById("volumeRange");
+const indicatorVolumeMusic = document.getElementById("indicatorVolume");
+
 
 
 let audio = new Audio();
@@ -92,6 +99,8 @@ function selectPlaylistUI(event) {
 
 function selectMusicUI(event) {
     if(event.target.className === "music") {
+        musicName.innerHTML = default_audio[event.target.dataset.srcMusic].name
+
         audioData.currentPlaylist = event.target.dataset.fromPlaylist;
         audioData.currentMusic = event.target.dataset.srcMusic;
         audioData.currentMusicTime = 0;
@@ -105,24 +114,105 @@ function playMusic() {
     if(audioData.isPlay) {
         audioData.currentMusicTime = audio.currentTime;
         audio.pause()
+        playButton.style.background = "white";
     } else {
         audio.src = audioData.currentMusic || audioData.currentPlaylist[0];
         audio.currentTime = audioData.currentMusicTime;
         audio.play()
+        playButton.style.background = "red"
     }
     audioData.isPlay = !audioData.isPlay
+}
+function onSpacePress(event) {
+    if(event.code === "Space") {
+        event.preventDefault();
+        playMusic();
+    }
+}
+
+function nextMusic() {
+    //
+}
+
+function previousMusic() {
+    //
 }
 
 
 
-audioData.currentPlaylist = playerData.playlists["Tchaikovsky"]
-playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]]
+// Часть когда ответственная за отображение времени и его изменения с помощью слайдера
+
+// перевод секунд в часы:минуты:секунды, возвращает строку
+function formatTime(sec) {
+    let hours = Math.round(sec / 3600)
+    let minutes = sec >= 3600 ? `0${Math.round(sec % 3600 / 60)}` : Math.round(sec % 3600 / 60)
+    let seconds = sec % 60 < 10 ? `0${Math.round(sec % 60)}` : Math.round(sec % 60);
+    return sec >= 3600 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+}
+// обновление отображения текущего времени / всего времени и позиции ползунка
+function updateTimeRangeSlider() {
+    indicatorMusicTime.innerHTML = formatTime(audio.currentTime) + " / " + (audio.duration ? formatTime(audio.duration) : "0:00");
+    timeRangeSlider.value = audio.currentTime / audio.duration * 100 || 0;
+}
+setInterval(updateTimeRangeSlider, 500);
+
+function changeTimeRange() {
+    if(audio.src) {
+        audioData.currentMusicTime = audio.currentTime = timeRangeSlider.value * audio.duration / 100;
+        updateTimeRangeSlider();
+    }
+}
+function onArrowLeftPress(event) {
+    if(event.code == "ArrowLeft") {
+        event.preventDefault();
+        audio.currentTime -= 5;
+        updateTimeRangeSlider();
+    }
+}
+function onArrowRightPress(event) {
+    if(event.code == "ArrowRight") {
+        event.preventDefault();
+        audio.currentTime += 5;
+        updateTimeRangeSlider();
+    }
+}
+
+// Часть кода ответственная за изменение и отображение громкости
+
+function changeVoluneRange() {
+    if(audio.src) {
+        audio.volume = volumeRangeSlider.value;
+    }
+}
+function onArrowUpPress(event) {
+    if(event.code == "ArrowLeft") {
+        event.preventDefault();
+        audio.volume += 5;
+    }
+}
+function onArrowDownPress(event) {
+    if(event.code == "ArrowRight") {
+        event.preventDefault();
+        audio.volume -= 5;
+    }
+}
+
+
+
+audioData.currentPlaylist = playerData.playlists["Tchaikovsky"];
+playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]];
 showSelectedPlaylistUI();
 showPlaylistUI();
 
 
 
-playlistsContainer.addEventListener("click", selectPlaylistUI)
-musicContainer.addEventListener("click", selectMusicUI)
+playlistsContainer.addEventListener("click", selectPlaylistUI);
+musicContainer.addEventListener("click", selectMusicUI);
 
-playButton.addEventListener("click", playMusic)
+timeRangeSlider.addEventListener("change", changeTimeRange);
+volumeRangeSlider.addEventListener("change", changeVoluneRange);
+
+playButton.addEventListener("click", playMusic);
+document.addEventListener("keydown", onSpacePress);
+document.addEventListener("keydown", onArrowLeftPress);
+document.addEventListener("keydown", onArrowRightPress);

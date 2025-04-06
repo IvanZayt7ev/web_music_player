@@ -35,12 +35,13 @@
                     <div class="flexContainer">
                         <h1 id="musicName">name song</h1><h1 id="indicatorMusicTime">00:00 / 00:00</h1>
                     </div>
-                    <input id="timeRange" type="range">
+                    <input id="timeRange" type="range" min="0" max="100" step="1" value="0">
                     <div class="buttonContainer">
                         <div class="sideContainer">
                             <h2>volume</h2>
                             <div class="volumeContainer">
-                                <input id="volumeRange" type="range"><p id="indicatorVolume">50%</p>
+                                <input id="volumeRange" type="range" min="0" max="100" step="1" value="100">
+                                <p id="indicatorVolume">50%</p>
                             </div>
                         </div>
                         <div class="mainButtonsContainer">
