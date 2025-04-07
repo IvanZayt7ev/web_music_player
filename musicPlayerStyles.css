@@ -105,7 +105,7 @@ body {
 }
 
 #indicatorVolume {
-    margin-left: 5%;
+    margin-left: auto;
 }
 
 #miniPlayerButton {
@@ -216,7 +216,9 @@ body {
 }
 
 
-
+.textContainer {
+    display: flex;
+}
 .button {
     height: 100%;
     width: 90px;

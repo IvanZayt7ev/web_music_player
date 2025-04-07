@@ -224,6 +224,12 @@ function openEditMenuUI() {
 function closeEditMenu() {
     modalEditMenu.style.display = "none"
 }
+function onEscPress(event) {
+    if(event.code === "Escape") {
+        event.preventDefault();
+        closeEditMenu()
+    }
+}
 
 function selectMenuEdit(id) {
     if(editorMenuData.selectedSectionMenu !== null) {
@@ -248,12 +254,22 @@ function showSelectionList() {
 }
 function selectMusicFromListUI(event) {
     if(event.target.classList.contains("selectionMusic")) {
-        let etc = event.target.classList
-        etc.contains("selected") ? etc.remove("selected") : etc.add("selected")
+        let etcl = event.target.classList
+        etcl.contains("selected") ? etcl.remove("selected") : etcl.add("selected")
     }
 }
 function createNewPlaylist() {
-    let newPlaylistArr = selectionInNewPlaylist.querySelectorAll("selected")
+    let nameNewPlaylist = inputNamePlaylist.value;
+    let arrNewPlaylist = [];
+    for(let node of selectionInNewPlaylist.querySelectorAll(".selected")) {
+        newPlaylistArr.push(node.dataset.src);
+    }
+    if(nameNewPlaylist in playerData.playlists) {
+        alert("пожалуйста, введите другое название плейлиста");
+    } else {
+        playerData.playlists[nameNewPlaylist] = arrNewPlaylist;
+        showPlaylistUI()
+    }
 }
 
 
@@ -278,6 +294,7 @@ document.addEventListener("keydown", onArrowLeftPress);
 document.addEventListener("keydown", onArrowRightPress);
 document.addEventListener("keydown", onArrowUpPress);
 document.addEventListener("keydown", onArrowDownPress);
+document.addEventListener("keydown", onEscPress);
 
 editMenuButton.addEventListener("click", openEditMenuUI);
 closeEditMenuButton.addEventListener("click", closeEditMenu)
