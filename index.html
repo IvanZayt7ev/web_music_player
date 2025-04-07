@@ -42,10 +42,11 @@
                     <input id="timeRange" type="range" min="0" max="100" step="1" value="0">
                     <div class="buttonContainer">
                         <div class="sideContainer">
-                            <h2>volume</h2>
+                            <div class="textContainer">
+                                <h2>volume: </h2><h2 id="indicatorVolume">100%</h2>
+                            </div>
                             <div class="volumeContainer">
                                 <input id="volumeRange" type="range" min="0" max="1" step="0.01" value="1">
-                                <p id="indicatorVolume">100%</p>
                             </div>
                         </div>
                         <div class="mainButtonsContainer">
@@ -78,7 +79,45 @@
         </div>
     </div>
 
-    <!--div id="editMenu"></div-->
+    <div id="modalEditMenu">
+        <div id="editMenu">
+        <div class="gridEditMenuContainer">
+            <div class="topbar"><div id="closeEditMenuButton"></div></div>
+
+            <div class="flexEditMenuContainer">
+
+                <div class="leftHotbar">
+                    <div>
+                        <div id="addMusicButton" class="buttonsMenu">добавить песню</div>
+                        <div id="editPlaylistsButton" class="buttonsMenu">изменить существующий плейлист</div>
+                        <div id="creatNewPlaylistButton" class="buttonsMenu">создать новый плейлист</div>
+                        <div id="onloadPlaylistButton" class="buttonsMenu">загрузить JSON плейлиста</div>
+                    </div>
+                </div>
+
+                 <div class="rightEditMenu">
+                    <div id="menuAdd" class="addMusic innerContentMenuEditor">
+                        <h2>введите путь до музыкального файла/скоро это поле будет заменено на вставку файла</h2>
+                        <h3>файл автоматически будет добавлен в базовый плейлист, но пока что он не работает(((</h3>
+                        <input id="inputSrcMusic" type="string" placeholder="musicFiles/favoriteMusic.mp3">
+                    </div>
+                    <div id="menuEditPL" class="editExistingPlaylist innerContentMenuEditor"></div>
+                    <div id="menuCreatePL" class="creatNewPlaylist innerContentMenuEditor">
+                        <p>нужно ввести имя нового плейлиста</p>
+                        <input id="inputNamePlaylist" type="string" placeholder="playlist cool music">
+                        <p>нужно выбрать музыку из базового плейлиста или плейлист будет пустым</p>
+                        <div id="selectionInNewPlaylist">
+                            <!--здесь хранится музыка из базового плейлиста-->
+                        </div>
+                        <button id="newPlaylistButton">создать плейлист</button>
+                    </div>
+                    <div id="menuOnloadPL" class="onloadPlaylist innerContentMenuEditor"></div>
+                 </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
 
     <script src="musicPlayerScript.js"></script>
 </body>

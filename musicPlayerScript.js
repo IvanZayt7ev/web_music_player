@@ -28,6 +28,14 @@ const musicContainer = document.getElementById("musicContainer").querySelector("
 const editMenu = document.getElementById("editMenu")
 
 const editMenuButton = document.getElementById("editMenuButton");
+const closeEditMenuButton = document.getElementById("closeEditMenuButton");
+
+const newPlaylistButton = document.getElementById("newPlaylistButton");
+
+const addMusicButton = document.getElementById("addMusicButton");
+const editPlaylistsButton = document.getElementById("editPlaylistsButton");
+const creatNewPlaylistButton = document.getElementById("creatNewPlaylistButton");
+const onloadPlaylistButton = document.getElementById("onloadPlaylistButton");
 
 const playButton = document.getElementById("playButton");
 const previousButton = document.getElementById("previousButton");
@@ -141,13 +149,9 @@ function nextMusic() {
 function previousMusic() {
     //
 }
-
-// Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
-function openEditMenuUI() {
-    editMenu.style.visibility = "visible"
-    alert("hee")
-}
 */
+
+
 
 // Часть когда ответственная за отображение времени и его изменения с помощью слайдера
 // перевод секунд в часы:минуты:секунды, возвращает строку
@@ -210,6 +214,70 @@ function onArrowDownPress(event) {
 
 
 
+// Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
+let editorMenuData = {
+    selectedSectionMenu: null,
+}
+
+function openEditMenuUI() {
+    modalEditMenu.style.display = "block"
+}
+
+function closeEditMenu() {
+    modalEditMenu.style.display = "none"
+}
+function onEscPress(event) {
+    if(event.code === "Escape") {
+        event.preventDefault();
+        closeEditMenu()
+    }
+}
+
+function selectMenuEdit(id) {
+    if(editorMenuData.selectedSectionMenu !== null) {
+        editorMenuData.selectedSectionMenu.style.display = "none";
+    }
+    editorMenuData.selectedSectionMenu = id;
+    id.style.display = "block"
+}
+
+// Секция кода по созданию нового плейлиста
+function showSelectionList() {
+    selectionInNewPlaylist.querySelectorAll(".selectionMusic").forEach(music => music.remove())
+
+    for(let music of playerData.playlists["basic playlist"]) {
+        let musicDIV = document.createElement("div");
+        musicDIV.className = "selectionMusic music";
+        musicDIV.innerHTML = default_audio[music].name
+        musicDIV.dataset.src = music;
+
+        selectionInNewPlaylist.append(musicDIV)
+    }
+}
+function selectMusicFromListUI(event) {
+    if(event.target.classList.contains("selectionMusic")) {
+        let etcl = event.target.classList
+        etcl.contains("selected") ? etcl.remove("selected") : etcl.add("selected")
+    }
+}
+
+function createNewPlaylist() {
+    let arrNewPlaylist = []
+    let nameNewPlaylist = inputNamePlaylist.value;
+
+    for(let node of selectionInNewPlaylist.querySelectorAll(".selected")) {
+        arrNewPlaylist.push(node.dataset.src);
+    }
+    if(nameNewPlaylist in playerData.playlists) {
+        alert("пожалуйста, введите другое название плейлиста");
+    } else {
+        playerData.playlists[nameNewPlaylist] = arrNewPlaylist;
+        showPlaylistUI()
+    }
+}
+
+
+
 audioData.currentPlaylist = playerData.playlists["Tchaikovsky"];
 playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]];
 showSelectedPlaylistUI();
@@ -230,5 +298,19 @@ document.addEventListener("keydown", onArrowLeftPress);
 document.addEventListener("keydown", onArrowRightPress);
 document.addEventListener("keydown", onArrowUpPress);
 document.addEventListener("keydown", onArrowDownPress);
+document.addEventListener("keydown", onEscPress);
 
-//editMenuButton.addEventListener("click", openEditMenuUI);
+editMenuButton.addEventListener("click", openEditMenuUI);
+closeEditMenuButton.addEventListener("click", closeEditMenu)
+window.addEventListener("click", event => {if(event.target.id === "modalEditMenu") closeEditMenu()})
+
+addMusicButton.addEventListener("click", function() {selectMenuEdit(menuAdd);})
+editPlaylistsButton.addEventListener("click", function() {selectMenuEdit(menuEditPL)})
+creatNewPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuCreatePL)})
+newPlaylistButton.addEventListener("click", createNewPlaylist)
+
+onloadPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuOnloadPL)})
+
+selectionInNewPlaylist.addEventListener("click", selectMusicFromListUI)
+selectMenuEdit(menuOnloadPL)
+showSelectionList()
