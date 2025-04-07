@@ -30,6 +30,8 @@ const editMenu = document.getElementById("editMenu")
 const editMenuButton = document.getElementById("editMenuButton");
 const closeEditMenuButton = document.getElementById("closeEditMenuButton");
 
+const newPlaylistButton = document.getElementById("newPlaylistButton");
+
 const addMusicButton = document.getElementById("addMusicButton");
 const editPlaylistsButton = document.getElementById("editPlaylistsButton");
 const creatNewPlaylistButton = document.getElementById("creatNewPlaylistButton");
@@ -258,11 +260,13 @@ function selectMusicFromListUI(event) {
         etcl.contains("selected") ? etcl.remove("selected") : etcl.add("selected")
     }
 }
+
 function createNewPlaylist() {
+    let arrNewPlaylist = []
     let nameNewPlaylist = inputNamePlaylist.value;
-    let arrNewPlaylist = [];
+
     for(let node of selectionInNewPlaylist.querySelectorAll(".selected")) {
-        newPlaylistArr.push(node.dataset.src);
+        arrNewPlaylist.push(node.dataset.src);
     }
     if(nameNewPlaylist in playerData.playlists) {
         alert("пожалуйста, введите другое название плейлиста");
@@ -303,6 +307,8 @@ window.addEventListener("click", event => {if(event.target.id === "modalEditMenu
 addMusicButton.addEventListener("click", function() {selectMenuEdit(menuAdd);})
 editPlaylistsButton.addEventListener("click", function() {selectMenuEdit(menuEditPL)})
 creatNewPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuCreatePL)})
+newPlaylistButton.addEventListener("click", createNewPlaylist)
+
 onloadPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuOnloadPL)})
 
 selectionInNewPlaylist.addEventListener("click", selectMusicFromListUI)
