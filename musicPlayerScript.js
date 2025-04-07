@@ -21,11 +21,19 @@ const default_audio = {
     },
 }
 
+
+
 const playlistsContainer = document.getElementById("playlistsContainer").querySelector("div");
 const musicContainer = document.getElementById("musicContainer").querySelector("div");
 const editMenu = document.getElementById("editMenu")
 
 const editMenuButton = document.getElementById("editMenuButton");
+const closeEditMenuButton = document.getElementById("closeEditMenuButton");
+
+const addMusicButton = document.getElementById("addMusicButton");
+const editPlaylistsButton = document.getElementById("editPlaylistsButton");
+const creatNewPlaylistButton = document.getElementById("creatNewPlaylistButton");
+const onloadPlaylistButton = document.getElementById("onloadPlaylistButton");
 
 const playButton = document.getElementById("playButton");
 const previousButton = document.getElementById("previousButton");
@@ -62,7 +70,6 @@ let playerData = {
     selectedPlaylist: null,
 }
 
-
 function showPlaylistUI() {
     playlistsContainer.querySelectorAll(".playlist").forEach(playlist => playlist.remove())
 
@@ -79,7 +86,6 @@ function showPlaylistUI() {
 
 function showSelectedPlaylistUI() {
     musicContainer.querySelectorAll(".music").forEach(music => music.remove())
-
 
     let [namePlaylist, arrayMusic] = playerData.selectedPlaylist
     for(let music of arrayMusic) {
@@ -132,18 +138,6 @@ function onSpacePress(event) {
         playMusic();
     }
 }
-function onArrowLeftPress(event) {
-    if(event.code == "ArrowLeft") {
-        event.preventDefault();
-        audio.currentTime -= 5;
-    }
-}
-function onArrowRightPress(event) {
-    if(event.code == "ArrowRight") {
-        event.preventDefault();
-        audio.currentTime += 5;
-    }
-}
 
 /*
 function nextMusic() {
@@ -153,13 +147,9 @@ function nextMusic() {
 function previousMusic() {
     //
 }
-
-// Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
-function openEditMenuUI() {
-    editMenu.style.visibility = "visible"
-    alert("hee")
-}
 */
+
+
 
 // Часть когда ответственная за отображение времени и его изменения с помощью слайдера
 // перевод секунд в часы:минуты:секунды, возвращает строку
@@ -222,6 +212,52 @@ function onArrowDownPress(event) {
 
 
 
+// Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
+let editorMenuData = {
+    selectedSectionMenu: null,
+}
+
+function openEditMenuUI() {
+    modalEditMenu.style.display = "block"
+}
+
+function closeEditMenu() {
+    modalEditMenu.style.display = "none"
+}
+
+function selectMenuEdit(id) {
+    if(editorMenuData.selectedSectionMenu !== null) {
+        editorMenuData.selectedSectionMenu.style.display = "none";
+    }
+    editorMenuData.selectedSectionMenu = id;
+    id.style.display = "block"
+}
+
+// Секция кода по созданию нового плейлиста
+function showSelectionList() {
+    selectionInNewPlaylist.querySelectorAll(".selectionMusic").forEach(music => music.remove())
+
+    for(let music of playerData.playlists["basic playlist"]) {
+        let musicDIV = document.createElement("div");
+        musicDIV.className = "selectionMusic music";
+        musicDIV.innerHTML = default_audio[music].name
+        musicDIV.dataset.src = music;
+
+        selectionInNewPlaylist.append(musicDIV)
+    }
+}
+function selectMusicFromListUI(event) {
+    if(event.target.classList.contains("selectionMusic")) {
+        let etc = event.target.classList
+        etc.contains("selected") ? etc.remove("selected") : etc.add("selected")
+    }
+}
+function createNewPlaylist() {
+    let newPlaylistArr = selectionInNewPlaylist.querySelectorAll("selected")
+}
+
+
+
 audioData.currentPlaylist = playerData.playlists["Tchaikovsky"];
 playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]];
 showSelectedPlaylistUI();
@@ -244,3 +280,14 @@ document.addEventListener("keydown", onArrowUpPress);
 document.addEventListener("keydown", onArrowDownPress);
 
 editMenuButton.addEventListener("click", openEditMenuUI);
+closeEditMenuButton.addEventListener("click", closeEditMenu)
+window.addEventListener("click", event => {if(event.target.id === "modalEditMenu") closeEditMenu()})
+
+addMusicButton.addEventListener("click", function() {selectMenuEdit(menuAdd);})
+editPlaylistsButton.addEventListener("click", function() {selectMenuEdit(menuEditPL)})
+creatNewPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuCreatePL)})
+onloadPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuOnloadPL)})
+
+selectionInNewPlaylist.addEventListener("click", selectMusicFromListUI)
+selectMenuEdit(menuOnloadPL)
+showSelectionList()

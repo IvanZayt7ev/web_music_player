@@ -16,17 +16,15 @@ body {
     width: 30%;
     background: #081E50;
 }
-.header {
-    display: flex;
+
+.upperHotbar {
+    height: 50px;
     width: 100%;
-}
-#newPlaylist {
-    margin-left: auto;
+    background: #051437;
 }
 
 #settingsbarContainer {
-    height: 50px;
-    background: #051437;
+    height: 100%;
     display: flex;
     margin-left: 1vw;
     margin-right: 1vw;
@@ -121,18 +119,100 @@ body {
     margin-right: auto;
 }
 
+
+
+#modalEditMenu {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+}
 #editMenu {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 1000;
     height: 80vh;
-    width: 80vh;
-    visibility: hidden;
+    width: 70vw;
+    margin: calc(10vh - 5px);
     margin-left: auto;
     margin-right: auto;
-    margin-top: 10vh;
-    margin-bottom: 10vh;
+    background: #051439;
+}
+.leftHotbar {
+    padding: 10px;
+    height: 100%;
+    width: 35%;
+    display: grid;
+}
+.buttonsMenu {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    height: 2em;
+    width: calc(100% -6px);
+    background: #051437;
+    font-size: 130%;
+    border: 3px solid blue;
+}
+.topbar {
+    height: 25px;
+    width: 100%;
+    display: flex;
+    border-bottom: 5px solid;
+}
+#closeEditMenuButton {
+    background: red;
+    height: 25px;
+    width: 25px;
+    margin-left: auto;
+}
+.gridEditMenuContainer {
+    display: grid;
+}
+.flexEditMenuContainer {
+    height: calc(80vh - 50px);
+    display: flex;
+}
+.rightEditMenu {
+    padding: 10px;
+    height: 100%;
+    width: 65%;
+    border-left: 5px solid;
+    background: #06163C;
+}
+
+.innerContentMenuEditor {
+    padding: 0;
+    display: grid;
+}
+.addMusic {
+    height: 100%;
+    width: 100%;
+    display: none;
+}
+#inputSrcMusic, #inputNamePlaylist {
+    width: calc(100% - 10px);
+}
+.editExistingPlaylist {
+    height: 100%;
+    width: 100%;
+    display: none;
+    background: black;
+}
+.creatNewPlaylist {
+    height: 100%;
+    width: 100%;
+    display: none;
+}
+.selected {
+    background: black;
+}
+.onloadPlaylist {
+    height: 100%;
+    width: 100%;
+    display: none;
+    background: red;
 }
 
 
@@ -153,7 +233,7 @@ input {
     height: 20px;
 }
 h1, h2, h3, p {
-    height: 30px;
+    font-size: 1.3em;
     margin: 0;
     padding: 0;
 }
