@@ -80,14 +80,10 @@ function showPlaylistUI() {
         playlistDIV.className = "playlist";
         playlistDIV.innerHTML = playlist;
         playlistDIV.dataset.NameAndArrayMusic = JSON.stringify([playlist, arrayMusic]);
-        playlistDIV.dataset.namePlaylist = playlist;
 
         playlistsContainer.append(playlistDIV);
-    }/*
-    playlistsContainer.querySelector(".selected")?.classList.remove("selected");
-    playlistsContainer.querySelectorAll(".playlist")?.forEach((node) => {
-        if(node.dataset.namePlaylist === "namePlaylist") node.classList.add("selected")
-    })*/
+    }
+    highlightSelectedPlaylist()
 }
 
 function showSelectedPlaylistUI() {
@@ -104,6 +100,8 @@ function showSelectedPlaylistUI() {
 
         musicContainer.append(musicDIV);
     }
+    highlightSelectedPlaylist()
+    highlightSelectedMusic()
 }
 
 function selectPlaylistUI(event) {
@@ -111,7 +109,6 @@ function selectPlaylistUI(event) {
         playerData.selectedPlaylist = JSON.parse(event.target.dataset.NameAndArrayMusic);
 
         showSelectedPlaylistUI();
-        //event.target.classList.add("selected");
     }
 }
 
@@ -126,19 +123,39 @@ function selectMusicUI(event) {
     }
 }
 
+function highlightSelectedPlaylist() {
+    if(playerData.selectedPlaylist) {
+        playlistsContainer.querySelectorAll(".selected")?.forEach(node => {node.classList.remove("selected")});
+        playlistsContainer.querySelectorAll(".playlist").forEach(function(node) {
+            if(JSON.parse(node.dataset.NameAndArrayMusic)[0] === playerData.selectedPlaylist[0]) node.classList.add("selected")
+        })
+    }
+}
+
+function highlightSelectedMusic() {
+    if(audioData.currentMusic) {
+        musicContainer.querySelectorAll(".selected")?.forEach(node => {node.classList.remove("selected")})
+        musicContainer.querySelectorAll(".music").forEach(function(node) {
+            if(node.dataset.srcMusic == audioData.currentMusic) node.classList.add("selected")
+        })
+    }
+}
+
 function playMusic() {
     if(audioData.isPlay) {
         audioData.currentMusicTime = audio.currentTime;
         audio.pause()
         playButton.querySelector("img").src = "icons/play_button.png"
     } else {
-        audio.src = audioData.currentMusic || audioData.currentPlaylist[0];
+        if(!audioData.currentMusic) audioData.currentMusic = audioData.currentPlaylist[0]
+        audio.src = audioData.currentMusic;
         audio.currentTime = audioData.currentMusicTime;
         audio.play()
         playButton.querySelector("img").src = "icons/pause_button.png"
 
         musicName.innerHTML = default_audio[audioData.currentMusic || audioData.currentPlaylist[0]].name
     }
+    highlightSelectedMusic()
     audioData.isPlay = !audioData.isPlay
 }
 function onSpacePress(event) {
