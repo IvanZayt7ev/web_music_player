@@ -83,13 +83,18 @@ function showPlaylistUI() {
         playlistDIV.dataset.namePlaylist = playlist;
 
         playlistsContainer.append(playlistDIV);
-    }
+    }/*
+    playlistsContainer.querySelector(".selected")?.classList.remove("selected");
+    playlistsContainer.querySelectorAll(".playlist")?.forEach((node) => {
+        if(node.dataset.namePlaylist === "namePlaylist") node.classList.add("selected")
+    })*/
 }
 
 function showSelectedPlaylistUI() {
     musicContainer.querySelectorAll(".music").forEach(music => music.remove())
 
     let [namePlaylist, arrayMusic] = playerData.selectedPlaylist
+
     for(let music of arrayMusic) {
         let musicDIV = document.createElement("div");
         musicDIV.className = "music";
@@ -104,7 +109,9 @@ function showSelectedPlaylistUI() {
 function selectPlaylistUI(event) {
     if(event.target.className === "playlist") {
         playerData.selectedPlaylist = JSON.parse(event.target.dataset.NameAndArrayMusic);
+
         showSelectedPlaylistUI();
+        //event.target.classList.add("selected");
     }
 }
 
@@ -272,6 +279,7 @@ function createNewPlaylist() {
         alert("пожалуйста, введите другое название плейлиста");
     } else {
         playerData.playlists[nameNewPlaylist] = arrNewPlaylist;
+        selectionInNewPlaylist.querySelectorAll(".selected").forEach((node) => {node.classList.remove("selected")})
         showPlaylistUI()
     }
 }
