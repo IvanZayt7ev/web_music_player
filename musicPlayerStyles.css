@@ -207,6 +207,7 @@ body {
 }
 .selected {
     background: black;
+    border: 3px solid grey;
 }
 .onloadPlaylist {
     height: 100%;
@@ -235,7 +236,7 @@ input {
     height: 20px;
 }
 h1, h2, h3, p {
-    font-size: 1.3em;
+    height: 30px;
     margin: 0;
     padding: 0;
 }

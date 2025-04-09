@@ -341,6 +341,7 @@ sectionsEditorMenuContainer.addEventListener("click", selectMenuEdit);
 newPlaylistButton.addEventListener("click", createNewPlaylist)
 
 selectionInNewPlaylist.addEventListener("click", selectMusicFromListUI)
-editorMenuData.selectedSectionMenu = document.getElementById(menuCreatePL)
-menuCreatePL.style.display = "block"
+
+editorMenuData.selectedSectionMenu = document.getElementById("menuCreatePL")
+editorMenuData.selectedSectionMenu.style.display = "block"
 showSelectionList()
