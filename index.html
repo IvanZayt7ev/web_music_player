@@ -39,7 +39,7 @@
                     <div class="flexContainer">
                         <h1 id="musicName">name song</h1><h1 id="indicatorMusicTime">00:00 / 00:00</h1>
                     </div>
-                    <input id="timeRange" type="range" min="0" max="100" step="1" value="0">
+                    <input id="timeRange" type="range" min="0" max="100" step="1" value="100">
                     <div class="buttonContainer">
                         <div class="sideContainer">
                             <div class="textContainer">
@@ -87,11 +87,11 @@
             <div class="flexEditMenuContainer">
 
                 <div class="leftHotbar">
-                    <div>
-                        <div id="addMusicButton" class="buttonsMenu">добавить песню</div>
-                        <div id="editPlaylistsButton" class="buttonsMenu">изменить существующий плейлист</div>
-                        <div id="creatNewPlaylistButton" class="buttonsMenu">создать новый плейлист</div>
-                        <div id="onloadPlaylistButton" class="buttonsMenu">загрузить JSON плейлиста</div>
+                    <div id="sectionsEditorMenuContainer">
+                        <div id="addMusicButton" data-connected="menuAdd" class="buttonsMenu">добавить песню</div>
+                        <div id="editPlaylistsButton" data-connected="menuEditPL" class="buttonsMenu">изменить существующий плейлист</div>
+                        <div id="creatNewPlaylistButton" data-connected="menuCreatePL" class="buttonsMenu">создать новый плейлист</div>
+                        <div id="onloadPlaylistButton" data-connected="menuOnloadPL" class="buttonsMenu">загрузить JSON плейлиста</div>
                     </div>
                 </div>
 

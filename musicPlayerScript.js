@@ -31,7 +31,7 @@ const editMenuButton = document.getElementById("editMenuButton");
 const closeEditMenuButton = document.getElementById("closeEditMenuButton");
 
 const newPlaylistButton = document.getElementById("newPlaylistButton");
-
+const editorMenuContainer = document.getElementById("sectionsEditorMenuContainer")
 const addMusicButton = document.getElementById("addMusicButton");
 const editPlaylistsButton = document.getElementById("editPlaylistsButton");
 const creatNewPlaylistButton = document.getElementById("creatNewPlaylistButton");
@@ -136,7 +136,9 @@ function highlightSelectedMusic() {
     if(audioData.currentMusic) {
         musicContainer.querySelectorAll(".selected")?.forEach(node => {node.classList.remove("selected")})
         musicContainer.querySelectorAll(".music").forEach(function(node) {
-            if(node.dataset.srcMusic == audioData.currentMusic) node.classList.add("selected")
+            if(node.dataset.srcMusic == audioData.currentMusic && node.dataset.fromPlaylist == audioData.currentPlaylist) {
+                node.classList.add("selected")
+            }
         })
     }
 }
@@ -180,9 +182,9 @@ function previousMusic() {
 // Часть когда ответственная за отображение времени и его изменения с помощью слайдера
 // перевод секунд в часы:минуты:секунды, возвращает строку
 function formatTime(sec) {
-    let hours = Math.round(sec / 3600)
-    let minutes = sec >= 3600 ? `0${Math.round(sec % 3600 / 60)}` : Math.round(sec % 3600 / 60)
-    let seconds = sec % 60 < 10 ? `0${Math.round(sec % 60)}` : Math.round(sec % 60);
+    let hours = Math.floor(sec / 3600)
+    let minutes = sec >= 3600 ? `0${Math.floor(sec % 3600 / 60)}` : Math.floor(sec % 3600 / 60)
+    let seconds = sec % 60 < 10 ? `0${Math.floor(sec % 60)}` : Math.floor(sec % 60);
     return sec >= 3600 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
 }
 // обновление отображения текущего времени / всего времени и позиции ползунка
@@ -257,12 +259,17 @@ function onEscPress(event) {
     }
 }
 
-function selectMenuEdit(id) {
-    if(editorMenuData.selectedSectionMenu !== null) {
-        editorMenuData.selectedSectionMenu.style.display = "none";
+function selectMenuEdit(event) {
+    if(event.target.classList.contains("buttonsMenu")) {
+        editorMenuContainer.querySelectorAll(".selected").forEach(node => {node.classList.remove("selected")})
+        event.target.classList.add("selected")
+
+        if(editorMenuData.selectedSectionMenu !== null) {
+            editorMenuData.selectedSectionMenu.style.display = "none";
+        }
+        editorMenuData.selectedSectionMenu = document.getElementById(event.target.dataset.connected);
+        editorMenuData.selectedSectionMenu.style.display = "block"
     }
-    editorMenuData.selectedSectionMenu = id;
-    id.style.display = "block"
 }
 
 // Секция кода по созданию нового плейлиста
@@ -308,6 +315,7 @@ playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"
 showSelectedPlaylistUI();
 showPlaylistUI();
 changeVolumeRange()
+setTimeout(() => {volumeRangeSlider.value = audio.volume}, 200) // костыль зато громкость отображается правильно с самого начала
 
 
 
@@ -329,13 +337,10 @@ editMenuButton.addEventListener("click", openEditMenuUI);
 closeEditMenuButton.addEventListener("click", closeEditMenu)
 window.addEventListener("click", event => {if(event.target.id === "modalEditMenu") closeEditMenu()})
 
-addMusicButton.addEventListener("click", function() {selectMenuEdit(menuAdd);})
-editPlaylistsButton.addEventListener("click", function() {selectMenuEdit(menuEditPL)})
-creatNewPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuCreatePL)})
+sectionsEditorMenuContainer.addEventListener("click", selectMenuEdit);
 newPlaylistButton.addEventListener("click", createNewPlaylist)
 
-onloadPlaylistButton.addEventListener("click", function() {selectMenuEdit(menuOnloadPL)})
-
 selectionInNewPlaylist.addEventListener("click", selectMusicFromListUI)
-selectMenuEdit(menuOnloadPL)
+editorMenuData.selectedSectionMenu = document.getElementById(menuCreatePL)
+menuCreatePL.style.display = "block"
 showSelectionList()
