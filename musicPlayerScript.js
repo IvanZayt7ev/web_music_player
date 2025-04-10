@@ -36,6 +36,7 @@ const addMusicButton = document.getElementById("addMusicButton");
 const editPlaylistsButton = document.getElementById("editPlaylistsButton");
 const creatNewPlaylistButton = document.getElementById("creatNewPlaylistButton");
 const onloadPlaylistButton = document.getElementById("onloadPlaylistButton");
+const playlistsContainerMenuEditor = document.getElementById("playerDataContainerMenuEditor");
 
 const playButton = document.getElementById("playButton");
 const previousButton = document.getElementById("previousButton");
@@ -240,6 +241,19 @@ function onArrowDownPress(event) {
 
 
 
+// Часть кода для рекатирования существующих плейлистов
+function showPlaylists(playlist) {
+    for(let music of playlist) {
+        let cdiv = document.createElement("div")
+        cdiv.className = "music"
+        cdiv.innerHTML = default_audio[music].name
+
+        playlistsContainerMenuEditor.append(cdiv)
+    }
+}
+showPlaylists(playerData.playlists["Tchaikovsky"])
+
+
 // Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
 let editorMenuData = {
     selectedSectionMenu: null,
@@ -343,5 +357,6 @@ newPlaylistButton.addEventListener("click", createNewPlaylist)
 selectionInNewPlaylist.addEventListener("click", selectMusicFromListUI)
 
 editorMenuData.selectedSectionMenu = document.getElementById("menuCreatePL")
+creatNewPlaylistButton.classList.add("selected")
 editorMenuData.selectedSectionMenu.style.display = "block"
 showSelectionList()

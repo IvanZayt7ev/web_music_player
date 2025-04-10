@@ -236,7 +236,7 @@ input {
     height: 20px;
 }
 h1, h2, h3, p {
-    height: 30px;
+/*     height: 30px; */
     margin: 0;
     padding: 0;
 }
