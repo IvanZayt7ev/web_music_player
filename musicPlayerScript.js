@@ -150,13 +150,13 @@ function playMusic() {
         audio.pause()
         playButton.querySelector("img").src = "icons/play_button.png"
     } else {
-        if(!audioData.currentMusic) audioData.currentMusic = audioData.currentPlaylist[0]
+        if(!audioData.currentMusic) audioData.currentMusic = playerData.playlists[audioData.currentPlaylist][0]
         audio.src = audioData.currentMusic;
         audio.currentTime = audioData.currentMusicTime;
         audio.play()
         playButton.querySelector("img").src = "icons/pause_button.png"
 
-        musicName.innerHTML = default_audio[audioData.currentMusic || audioData.currentPlaylist[0]].name
+        musicName.innerHTML = default_audio[audioData.currentMusic || playerData.playlists[audioData.currentPlaylist][0]].name
     }
     highlightSelectedMusic()
     audioData.isPlay = !audioData.isPlay
@@ -168,15 +168,35 @@ function onSpacePress(event) {
     }
 }
 
-/*
+
 function nextMusic() {
-    //
+    let currentPlaylistArr = playerData.playlists[audioData.currentPlaylist]
+    let indexMusic = currentPlaylistArr.indexOf((audioData.currentMusic || currentPlaylistArr[0]))
+
+    if(indexMusic === currentPlaylistArr.length - 1) {
+        audioData.currentMusic = currentPlaylistArr[0]
+    } else {
+        audioData.currentMusic = currentPlaylistArr[indexMusic + 1]
+    }
+    audioData.currentMusicTime = audio.currentTime = 0
+    audioData.isPlay = false
+    playMusic()
 }
 
 function previousMusic() {
-    //
+    let currentPlaylistArr = playerData.playlists[audioData.currentPlaylist]
+    let indexMusic = currentPlaylistArr.indexOf((audioData.currentMusic || currentPlaylistArr[0]))
+
+    if(indexMusic === 0) {
+        audioData.currentMusic = currentPlaylistArr.at(-1)
+    } else {
+        audioData.currentMusic = currentPlaylistArr[indexMusic - 1]
+    }
+    audioData.currentMusicTime = audio.currentTime = 0
+    audioData.isPlay = false
+    playMusic()
 }
-*/
+
 
 
 
@@ -242,6 +262,7 @@ function onArrowDownPress(event) {
 
 
 // Часть кода для рекатирования существующих плейлистов
+/*
 function showPlaylists(playlist) {
     for(let music of playlist) {
         let cdiv = document.createElement("div")
@@ -251,7 +272,7 @@ function showPlaylists(playlist) {
         playlistsContainerMenuEditor.append(cdiv)
     }
 }
-showPlaylists(playerData.playlists["Tchaikovsky"])
+showPlaylists(playerData.playlists["Tchaikovsky"])*/
 
 
 // Часть когда ответственная за добавления плейлиста, отдельной песни или за создание нового плейлиста из уже существующих
@@ -324,7 +345,7 @@ function createNewPlaylist() {
 
 
 
-audioData.currentPlaylist = playerData.playlists["Tchaikovsky"];
+audioData.currentPlaylist = "Tchaikovsky";
 playerData.selectedPlaylist = ["Tchaikovsky", playerData.playlists["Tchaikovsky"]];
 showSelectedPlaylistUI();
 showPlaylistUI();
@@ -340,6 +361,8 @@ timeRangeSlider.addEventListener("change", changeTimeRange);
 volumeRangeSlider.addEventListener("change", changeVolumeRange);
 
 playButton.addEventListener("click", playMusic);
+nextButton.addEventListener("click", nextMusic)
+previousButton.addEventListener("click", previousMusic)
 document.addEventListener("keydown", onSpacePress);
 document.addEventListener("keydown", onArrowLeftPress);
 document.addEventListener("keydown", onArrowRightPress);
