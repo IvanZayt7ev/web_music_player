@@ -41,6 +41,7 @@ const playlistsContainerMenuEditor = document.getElementById("playerDataContaine
 const playButton = document.getElementById("playButton");
 const previousButton = document.getElementById("previousButton");
 const nextButton = document.getElementById("nextButton");
+const repeatButton = document.getElementById("repeatButton");
 const miniPlayerButton = document.getElementById("miniPlayerButton");
 
 const musicName = document.getElementById("musicName");
@@ -197,6 +198,22 @@ function previousMusic() {
     playMusic()
 }
 
+function repeatMusic() {
+    audio.currentTime = audioData.currentMusicTime = 0;
+    audio.src = audioData.currentMusic;
+    audioData.isPlay = false;
+    playMusic();
+}
+
+function onEndedMusic() {
+    if(audioData.isLoop) {
+        repeatMusic();
+    } else {
+        audio.currentTime = audioData.currentMusicTime = 0;
+        audioData.isPlay = false;
+        nextMusic();
+    }
+}
 
 
 
@@ -361,8 +378,18 @@ timeRangeSlider.addEventListener("change", changeTimeRange);
 volumeRangeSlider.addEventListener("change", changeVolumeRange);
 
 playButton.addEventListener("click", playMusic);
-nextButton.addEventListener("click", nextMusic)
-previousButton.addEventListener("click", previousMusic)
+nextButton.addEventListener("click", nextMusic);
+previousButton.addEventListener("click", previousMusic);
+repeatButton.addEventListener("click", function() {
+    let img = repeatButton.querySelector("img");
+    if(audioData.isLoop) {
+        img.src = "icons/repeat_off_button.png";
+    } else {
+        img.src = "icons/repeat_on_button.png";
+    }
+    audioData.isLoop = !audioData.isLoop;
+})
+audio.addEventListener("ended", onEndedMusic)
 document.addEventListener("keydown", onSpacePress);
 document.addEventListener("keydown", onArrowLeftPress);
 document.addEventListener("keydown", onArrowRightPress);
